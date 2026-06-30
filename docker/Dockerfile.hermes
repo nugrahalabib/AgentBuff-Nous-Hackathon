@@ -1,0 +1,301 @@
+# =============================================================================
+# AgentBuff Hermes Container — per-user agentic AI runtime
+# =============================================================================
+#
+# What's inside:
+#   - Python 3.11 slim base
+#   - hermes-agent v0.16.0 (pinned exact — DO NOT bump without regression test;
+#     GitHub CalVer tag for vendored bits pinned via HERMES_GIT_REF=v2026.6.5)
+#   - AgentBuff Hermes Bridge (this repo's docker/hermes-bridge/ folder)
+#   - Minimal runtime tools: git, ripgrep, ffmpeg, ca-certificates
+#
+# What's NOT inside:
+#   - User data (mounted via volume at /home/hermes/.hermes)
+#   - Per-user secrets (injected via env at `docker run`)
+#   - Persistent SessionDB (lives in volume)
+#
+# Build:
+#   docker build -t hermes-agent:local -f docker/Dockerfile.hermes .
+#   (run from LandingPage/ root so Docker can see docker/hermes-bridge/)
+#
+# Run (manual):
+#   docker run -d \
+#     --name hermes-user-<id> \
+#     --network agentbuff_isolated \
+#     -p 127.0.0.1:18800:18789 \
+#     -p 127.0.0.1:18801:18790 \
+#     -v hermes-user-<id>:/home/hermes/.hermes \
+#     -e BRIDGE_TOKEN=<random-32-byte-hex> \
+#     -e HERMES_DEFAULT_GEMINI_KEY=<key> \
+#     -e PORTAL_BASE_URL=http://host.docker.internal:617 \
+#     --memory=1024m --cpus=1.0 --pids-limit=512 \
+#     --cap-drop=ALL --security-opt=no-new-privileges \
+#     hermes-agent:local
+#
+# Hardening flags MUST be set by the caller (src/lib/hermes/docker.ts);
+# they're not baked in because some dev workflows need exec/shell access.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Stage 1: Build base + pip layer (cached for fast rebuilds)
+# -----------------------------------------------------------------------------
+FROM python:3.11.10-slim-bookworm AS base
+
+# Pin OS package versions to be reproducible
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Runtime deps — kept lean; only what Hermes + bridge actually need.
+# - ca-certificates: HTTPS for LLM API calls + skill installs
+# - git: hermes skills install (fetches from GitHub registry)
+# - curl, gnupg: healthcheck + NodeSource repo install
+# - ripgrep: agent's web search / file search tool
+# - ffmpeg: voice memo transcription, video frame extraction
+# - libsndfile1, libsm6, libxext6: image processing deps for vision
+# - tini: PID 1 reaper (handles zombie processes from Hermes subprocess tree)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        git \
+        curl \
+        gnupg \
+        ripgrep \
+        ffmpeg \
+        libsndfile1 \
+        libsm6 \
+        libxext6 \
+        tini \
+    && rm -rf /var/lib/apt/lists/*
+
+# Node.js 20 LTS — REQUIRED by Hermes' embedded TUI (`hermes --tui` is an
+# Ink/React-for-terminal app, runs on Node). Without this, dashboard's
+# Chat tab dies with "Chat unavailable: 1" (sys.exit from _make_tui_argv
+# when node binary not on PATH).
+#
+# NodeSource setup script adds their apt repo + GPG key. Bookworm's
+# default `nodejs` package would give us 18.x, which works but trails
+# upstream Ink testing — NodeSource gives current LTS line.
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && rm -rf /var/lib/apt/lists/* \
+    && node --version && npm --version
+
+# -----------------------------------------------------------------------------
+# Stage 2: Hermes + bridge install layer
+# -----------------------------------------------------------------------------
+FROM base AS app
+
+# Create unprivileged user (matches OpenClaw pattern: never run as root)
+ARG HERMES_UID=10001
+ARG HERMES_GID=10001
+RUN groupadd --gid ${HERMES_GID} hermes \
+    && useradd --uid ${HERMES_UID} --gid ${HERMES_GID} \
+               --home-dir /home/hermes --create-home \
+               --shell /bin/bash hermes
+
+# Install hermes-agent EXACT version (pinned per migration-plan.md).
+# This is the only place we should bump Hermes — every other layer reads
+# what's installed here.
+#
+# IMPORTANT: pin EXACT (==) per Hermes' own supply-chain policy.
+# When you need to bump: edit ONLY this line, then run
+#   scripts/test-hermes-bridge.ts to verify the wire contract still holds
+#   before merging.
+ARG HERMES_VERSION=0.16.0
+# Extras:
+#   [messaging] — python-telegram-bot, discord.py[voice], slack-bolt/sdk,
+#                 aiohttp+brotlicffi, qrcode. Required so `hermes gateway run`
+#                 has live adapters; without it, all channels log
+#                 "<platform>: <library> not installed".
+#   [web]       — fastapi==0.133.1 + uvicorn[standard]==0.41.0. Required for
+#                 `hermes dashboard` (admin web UI on port 9119). Without it
+#                 dashboard fails with "No module named 'fastapi'".
+#   [pty]       — ptyprocess. Required for dashboard's embedded chat tab
+#                 (HERMES_DASHBOARD_TUI=1) which proxies `hermes --tui` over
+#                 WebSocket. Without it the dashboard still works but the
+#                 chat tab is disabled.
+#   [mcp]       — the `mcp` Python SDK. REQUIRED for the /app MCP "Plugin &
+#                 Connector" feature: without it `hermes mcp test` and every
+#                 configured MCP server fail at connect with "requires the 'mcp'
+#                 Python SDK, but it is not installed" — so NO external tool
+#                 server (Notion/GitHub/filesystem/etc) can ever load. Proven
+#                 live 2026-06-12: adding it makes `hermes mcp test` connect +
+#                 discover tools end-to-end.
+RUN pip install --no-cache-dir "hermes-agent[messaging,web,pty,mcp]==${HERMES_VERSION}"
+
+# ----------------------------------------------------------------------------
+# Vendor `ui-tui` source from NousResearch/hermes-agent GitHub
+# ----------------------------------------------------------------------------
+# Hermes' pip wheel (the `hermes-agent` package on PyPI) does NOT ship the
+# TUI source — only the Python code + pre-built web dashboard. `hermes --tui`
+# and the dashboard's embedded chat tab need the React-for-terminal (Ink)
+# app, which lives in the `ui-tui/` subfolder of the upstream repo.
+#
+# Without this step:
+#   - `hermes --tui` exits 1 ("node not found" OR "ui-tui not found").
+#   - Dashboard Chat tab shows "Chat unavailable: 1".
+#
+# Strategy: shallow git clone of NousResearch/hermes-agent at the matching
+# tag, sparse-checkout ONLY `ui-tui/`, then npm install + esbuild bundle.
+# We tell Hermes where to find it via HERMES_TUI_DIR (set in entrypoint).
+#
+# Build-time, not run-time: keeps first-chat-open instant. Trade-off is a
+# heavier image (+~500MB for node_modules + esbuild output) but image
+# ships ready-to-use.
+# NOTE: the PyPI package uses semver (0.15.2) but the GitHub repo tags CalVer
+# (vYYYY.M.D), so `--branch v0.15.2` never matches → we ALWAYS fall through to
+# the second clone (default branch / HEAD). ui-tui only powers `hermes --tui` +
+# the dashboard chat tab (:9119); /app chat does NOT depend on it (it uses the
+# pip-shipped tui_gateway over the bridge), so HEAD drift here is low-risk.
+# GitHub repo tags CalVer (vYYYY.M.D), PyPI uses semver — they do NOT match, so
+# `v${HERMES_VERSION}` (e.g. v0.16.0) never resolves and we fall back to HEAD.
+# HERMES_GIT_REF lets a build PIN the exact CalVer tag for the version being
+# installed (e.g. v2026.6.5 == PyPI 0.16.0) so the vendored ui-tui /
+# dashboard_auth / skill packs match the wheel. Unset → default to v${HERMES_VERSION}
+# (preserves the prior HEAD-fallback behaviour for the 0.15.2/local build).
+ARG HERMES_GIT_REF=v2026.6.5
+RUN set -eux; \
+    GIT_REF="${HERMES_GIT_REF:-v${HERMES_VERSION}}"; \
+    git clone --depth=1 --branch "$GIT_REF" --filter=blob:none --no-checkout \
+        https://github.com/NousResearch/hermes-agent.git /tmp/hermes-src \
+        || git clone --depth=1 --filter=blob:none --no-checkout \
+            https://github.com/NousResearch/hermes-agent.git /tmp/hermes-src; \
+    cd /tmp/hermes-src; \
+    git sparse-checkout init --cone; \
+    git sparse-checkout set ui-tui scripts/lib plugins skills optional-skills hermes_cli/dashboard_auth; \
+    git checkout HEAD; \
+    mkdir -p /opt/hermes-ui-tui; \
+    cp -r ui-tui/. /opt/hermes-ui-tui/; \
+    # Vendor the `hermes_cli.dashboard_auth` subpackage. The PyPI wheel
+    # (hermes-agent==0.15.x) SHIPS web_server.py which imports
+    # hermes_cli.dashboard_auth.{middleware,audit,ws_tickets,prefix} but does
+    # NOT ship the subpackage itself (packaging gap) → `hermes dashboard`
+    # (port 9119, what /loby points to) crashes on boot with
+    # ModuleNotFoundError. Copy it from the version-matched GitHub checkout
+    # into the installed hermes_cli. Without this /loby is dead. Same
+    # wheel-ships-incomplete pattern as ui-tui + skills above.
+    # Compute from / (NOT cwd=/tmp/hermes-src) — the sparse-checkout brought a
+    # partial /tmp/hermes-src/hermes_cli with __init__.py (cone mode), so
+    # `import hermes_cli` from cwd would shadow the real site-packages copy.
+    SITE_HERMES_CLI="$(cd / && python -c 'import hermes_cli, os; print(os.path.dirname(hermes_cli.__file__))')"; \
+    if [ -d /tmp/hermes-src/hermes_cli/dashboard_auth ]; then \
+        cp -r /tmp/hermes-src/hermes_cli/dashboard_auth "$SITE_HERMES_CLI/dashboard_auth"; \
+        ( cd / && python -c "import hermes_cli.dashboard_auth" ) && echo "vendored dashboard_auth -> $SITE_HERMES_CLI (import OK)"; \
+    else \
+        echo "ERROR: hermes_cli/dashboard_auth missing from checkout" && exit 1; \
+    fi; \
+    # Vendor the free bundled core (78) + optional (95) skill packs out of the
+    # version-matched checkout. The pip wheel does NOT ship the skills/ data
+    # tree, so without this the user's ~/.hermes/skills is empty and the
+    # create-agent wizard's skill list shows nothing. The bridge entrypoint
+    # seeds these into each volume on first boot (seed_bundled_skills.py).
+    mkdir -p /opt/hermes-bundled-skills; \
+    if [ -d skills ]; then cp -r skills /opt/hermes-bundled-skills/skills; fi; \
+    if [ -d optional-skills ]; then cp -r optional-skills /opt/hermes-bundled-skills/optional-skills; fi; \
+    echo "bundled skills vendored: $(find /opt/hermes-bundled-skills -iname SKILL.md | wc -l) packs"; \
+    # Bake a content hash of the bundled pack (skill paths + sizes). The
+    # entrypoint compares this to a per-volume marker so existing volumes
+    # re-sync when the pack CHANGES at the SAME engine version — without it
+    # they froze at their provision-vintage skill set (only an engine-version
+    # bump triggered reconcile). See hermes-entrypoint.sh.
+    find /opt/hermes-bundled-skills -name SKILL.md -printf '%P %s\n' 2>/dev/null | LC_ALL=C sort | sha256sum | cut -d' ' -f1 > /opt/hermes-bundled-skills/.pack-hash; \
+    echo "bundled pack hash: $(cat /opt/hermes-bundled-skills/.pack-hash)"; \
+    cd /opt/hermes-ui-tui; \
+    npm install --no-fund --no-audit --silent --progress=false; \
+    # Use the upstream build script (scripts/build.mjs) so we match the
+    # exact bundling settings Hermes maintainers ship. Produces dist/entry.js.
+    npm run build 2>&1 | tail -10; \
+    test -f dist/entry.js || (echo "ERROR: ui-tui build did not produce dist/entry.js" && exit 1); \
+    # Vendor dashboard plugin assets (manifest.json + dist/) that the pip
+    # wheel ships incomplete. Each plugin's plugin_api.py is in the wheel
+    # but manifest.json + dist/index.js are not — the dashboard plugin
+    # discovery loop skips folders without manifest.json, so the Kanban
+    # tab + any other plugin tab is silently invisible.
+    # Copy ONLY the dashboard subfolder from each plugin (we don't want
+    # the engine-side plugin code — pip wheel already has that).
+    PLUGIN_ROOT=/usr/local/lib/python3.11/site-packages/plugins; \
+    for plugin_dir in /tmp/hermes-src/plugins/*/; do \
+        plugin_name=$(basename "$plugin_dir"); \
+        src_dashboard="$plugin_dir/dashboard"; \
+        if [ -d "$src_dashboard" ] && [ -f "$src_dashboard/manifest.json" ]; then \
+            dst_dashboard="$PLUGIN_ROOT/$plugin_name/dashboard"; \
+            mkdir -p "$dst_dashboard"; \
+            cp "$src_dashboard/manifest.json" "$dst_dashboard/manifest.json"; \
+            if [ -d "$src_dashboard/dist" ]; then \
+                cp -r "$src_dashboard/dist" "$dst_dashboard/dist"; \
+            fi; \
+            if [ -f "$src_dashboard/icon.svg" ]; then \
+                cp "$src_dashboard/icon.svg" "$dst_dashboard/icon.svg"; \
+            fi; \
+            echo "  vendored plugin dashboard: $plugin_name"; \
+        fi; \
+    done; \
+    rm -rf /tmp/hermes-src /opt/hermes-ui-tui/.git
+ENV HERMES_TUI_DIR=/opt/hermes-ui-tui
+
+# Baseline-parity skills: a few core skills (web-research, programmatic-graphics,
+# observability-and-audit-mode, system-audit-and-introspection) that stock Hermes
+# auto-downloads from its hub but our vendored bundled pack lacks. Merge them into
+# the bundled pack so EVERY lean container seeds the SAME canonical skill set
+# (deterministic, offline) — the agreed baseline (Chief 2026-06-03: every new
+# agent/account must start with an identical config/skills/plugins).
+COPY docker/baseline-skills/ /opt/hermes-bundled-skills/skills/
+
+# BuffHub marketplace helper CLIs (search/buy) — single-arg wrappers the agent calls
+# from the buffhub-marketplace skill. Baking them into PATH removes the multi-line
+# command-reconstruction surface that made an LLM drop the `?q=` filter or mangle the
+# inline python. The agent just runs `buffhub-search <kw>` / `buffhub-buy <slug>`.
+COPY docker/bin/buffhub-search docker/bin/buffhub-buy docker/bin/pos-report /usr/local/bin/
+RUN chmod 755 /usr/local/bin/buffhub-search /usr/local/bin/buffhub-buy /usr/local/bin/pos-report
+
+# Install bridge dependencies
+COPY docker/hermes-bridge/requirements.txt /tmp/bridge-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/bridge-requirements.txt \
+    && rm /tmp/bridge-requirements.txt
+
+# Copy bridge source code
+COPY --chown=hermes:hermes docker/hermes-bridge/ /app/bridge/
+
+# Bake the WhatsApp Baileys bridge node_modules (per-agent WA pairing). node + npm
+# are already in the image; Baileys is heavy so install once at build time rather
+# than on first pairing. node_modules ends up root-owned → chown back to hermes.
+RUN cd /app/bridge/whatsapp-bridge \
+    && npm install --no-audit --no-fund --loglevel=error \
+    && chown -R hermes:hermes /app/bridge/whatsapp-bridge
+
+# Copy entrypoint script
+COPY --chown=root:root docker/hermes-entrypoint.sh /app/entrypoint.sh
+RUN chmod 0755 /app/entrypoint.sh
+
+# Set up unprivileged-user runtime paths
+USER hermes
+ENV HOME=/home/hermes \
+    HERMES_HOME=/home/hermes/.hermes \
+    PYTHONPATH=/app/bridge \
+    PATH=/home/hermes/.local/bin:${PATH} \
+    BRIDGE_PORT=18789 \
+    BRIDGE_HEALTH_PORT=18790 \
+    BRIDGE_HOST=0.0.0.0 \
+    LOG_LEVEL=INFO
+
+WORKDIR /home/hermes
+
+# Pre-create the home/.hermes structure so bind-mount of an empty volume works
+RUN mkdir -p /home/hermes/.hermes/agents /home/hermes/.hermes/skills /home/hermes/.hermes/cron
+
+# Ports:
+#   18789 — bridge WebSocket (portal connects here)
+#   18790 — bridge HTTP health endpoint (Docker healthcheck)
+#   9119  — `hermes dashboard` admin web UI (raw Hermes panel; /loby
+#           redirects here so chief can compare with /app)
+EXPOSE 18789 18790 9119
+
+# Healthcheck — bridge serves /health endpoint
+# Wait 30s before first check to let Hermes subprocess boot.
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=3 \
+    CMD curl -fsS http://127.0.0.1:18790/ > /dev/null || exit 1
+
+# tini reaps zombie processes from Hermes subprocess tree
+ENTRYPOINT ["/usr/bin/tini", "--", "/app/entrypoint.sh"]

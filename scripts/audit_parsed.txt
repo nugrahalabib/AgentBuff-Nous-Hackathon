@@ -1,0 +1,24 @@
+=== LOCKED TOOLSETS (16) ===
+LOCK     enabled=0 discord              reqs=[channel:discord] :: Butuh: Bot token Discord
+LOCK     enabled=0 discord_admin        reqs=[channel:discord] :: Butuh: Bot token Discord
+LOCK     enabled=1 agentbuff-bluebubbles reqs=[external:] :: Diblokir — butuh Mac aktif 24/7 + BlueBubbles server
+LOCK     enabled=1 agentbuff-discord    reqs=[channel:discord] :: Butuh: Bot token Discord
+LOCK     enabled=1 agentbuff-homeassistant reqs=[env:HASS_URL,env:HASS_TOKEN] :: Butuh 2 setup
+LOCK     enabled=1 agentbuff-matrix     reqs=[env:MATRIX_HOMESERVER,env:MATRIX_ACCESS_TOKEN] :: Butuh 2 setup
+LOCK     enabled=1 agentbuff-mattermost reqs=[env:MATTERMOST_URL,env:MATTERMOST_TOKEN] :: Butuh 2 setup
+LOCK     enabled=1 agentbuff-signal     reqs=[external:] :: Butuh: Nomor HP Signal + signal-cli setup
+LOCK     enabled=1 agentbuff-slack      reqs=[channel:slack] :: Butuh: Bot token Slack + signing secret
+LOCK     enabled=1 agentbuff-telegram   reqs=[channel:telegram] :: Butuh: Bot token Telegram
+LOCK     enabled=1 agentbuff-whatsapp   reqs=[channel:whatsapp] :: Butuh: Sesi WhatsApp (QR scan)
+LOCK     enabled=0 homeassistant        reqs=[env:HASS_URL,env:HASS_TOKEN] :: Butuh 2 setup
+LOCK     enabled=0 image_gen            reqs=[llm-key:openai] :: Butuh: Kunci OpenAI / xAI / Gemini
+LOCK     enabled=0 spotify              reqs=[env:SPOTIFY_CLIENT_ID,env:SPOTIFY_CLIENT_SECRET,env:SPOTIFY_REFRESH_TOKEN] :: Butuh 3 setup
+LOCK     enabled=0 video_gen            reqs=[llm-key:gemini] :: Butuh: Kunci Gemini / Qwen / Moonshot
+LOCK     enabled=0 vision               reqs=[llm-key:gemini] :: Butuh: Model multimodal (Gemini / OpenAI / Claude)
+
+=== READY TOOLSETS (0) ===
+
+=== ALL llm-key TOOLSETS (3) — these depend on a model key ===
+LOCK     enabled=0 image_gen            reqs=[llm-key:openai] :: Butuh: Kunci OpenAI / xAI / Gemini
+LOCK     enabled=0 video_gen            reqs=[llm-key:gemini] :: Butuh: Kunci Gemini / Qwen / Moonshot
+LOCK     enabled=0 vision               reqs=[llm-key:gemini] :: Butuh: Model multimodal (Gemini / OpenAI / Claude)

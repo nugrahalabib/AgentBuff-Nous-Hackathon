@@ -1,0 +1,7 @@
+### which component renders the top tab bar (Chat/Overview/Agents/etc)? ###
+--- TAB registry with labels (the real nav) ---
+src/components/app/chat-workspace-header.tsx:833:    { label: string; border: string; bg: string; text: string; dot: string }
+src/components/app/chat-workspace-header.tsx:836:      label: "Online",
+src/components/app/chat-workspace-header.tsx:843:      label: "Mikir",
+src/components/app/chat-workspace-header.tsx:850:      label: "Ngetik...",
+src/components/app/chat-workspace-header.tsx:857:      label: "Lagi kerja",

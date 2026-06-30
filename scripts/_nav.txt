@@ -1,0 +1,59 @@
+### sidebar nav items shown to user (the real visible tab list + order) ###
+src/components/app/overview/active-surface.tsx:107:            const label = data!.channelLabels?.[id] ?? id;
+src/components/app/overview/active-surface.tsx:121:                      {label}
+src/components/app/overview/active-surface.tsx:131:                    label={
+src/components/app/overview/active-surface.tsx:213:                        aria-label={t.app.overview.badgeDefault}
+src/components/app/overview/active-surface.tsx:226:                  label={
+src/components/app/overview/active-surface.tsx:256:  label,
+src/components/app/overview/active-surface.tsx:259:  label: string;
+src/components/app/overview/active-surface.tsx:272:      {label}
+src/components/app/overview/attention-section.tsx:78:        action: { label: "Cek Saluran", kind: "navigate", href: "/app/channels" },
+src/components/app/overview/attention-section.tsx:114:      aria-label={t.app.overview.attention.title}
+src/components/app/overview/attention-section.tsx:220:          {item.action.label}
+src/components/app/overview/detail-engine.tsx:37:  expiry?: { at?: number; label?: string };
+src/components/app/overview/detail-engine.tsx:38:  usage?: { windows?: Array<{ label?: string; usedPercent?: number; resetAt?: number }> };
+src/components/app/overview/detail-engine.tsx:111:          label={t.app.overview.detailEngine.versionLabel}
+src/components/app/overview/detail-engine.tsx:115:          label={t.app.overview.detailEngine.uptimeLabel}
+src/components/app/overview/detail-engine.tsx:119:          label={t.app.overview.detailEngine.pulseIntervalLabel}
+src/components/app/overview/detail-engine.tsx:129:          label={t.app.overview.detailEngine.heartbeatAgentLabel}
+src/components/app/overview/detail-engine.tsx:214:        <KeyValue label={t.app.overview.detailEngine.cronJobs} value={String(total)} />
+src/components/app/overview/detail-engine.tsx:216:          label={t.app.overview.detailEngine.cronNextRun}
+src/components/app/overview/detail-engine.tsx:220:          label={t.app.overview.detailEngine.cronFailed}
+src/components/app/overview/detail-engine.tsx:229:function InfoRow({ label, value }: { label: string; value: string }) {
+src/components/app/overview/detail-engine.tsx:233:        {label}
+src/components/app/overview/detail-engine.tsx:241:  label,
+src/components/app/overview/detail-engine.tsx:245:  label: string;
+src/components/app/overview/detail-engine.tsx:252:        {label}
+src/components/app/overview/energy-hero.tsx:11: * - balance ≤ 20% (low) → amber border + warn label
+src/components/app/overview/energy-hero.tsx:12: * - balance ≤ 5% (critical) → red border + critical label
+src/components/app/overview/energy-hero.tsx:13: * - balance ≤ 0 (exhausted) → red destructive + exhausted label, glow CTA
+src/components/app/overview/energy-hero.tsx:141:      aria-label={t.app.overview.energy.title}
+src/components/app/overview/energy-hero.tsx:176:          aria-label={`${used} dari ${effMax} energy terpakai`}
+src/components/app/overview/engine-health-strip.tsx:57:  // di store re-trigger render ~3s, jadi uptime label refresh natural.
+src/components/app/overview/greeting-bar.tsx:11: * - subscription state → tier label + expiresAt
+src/components/app/overview/greeting-bar.tsx:87:        label: t.app.overview.tier.guildMaster,
+src/components/app/overview/greeting-bar.tsx:95:          label: t.app.overview.tier.opBuff,
+src/components/app/overview/greeting-bar.tsx:102:          label: t.app.overview.tier.starter,
+src/components/app/overview/greeting-bar.tsx:146:        {tierConfig.label}
+src/components/app/overview/quick-actions.tsx:49:    label: string;
+src/components/app/overview/quick-actions.tsx:56:      label: t.app.overview.quickActions.newChat,
+src/components/app/overview/quick-actions.tsx:63:      label: t.app.overview.quickActions.itemShop,
+src/components/app/overview/quick-actions.tsx:69:      label: t.app.overview.quickActions.recruit,
+src/components/app/overview/quick-actions.tsx:75:      label: t.app.overview.quickActions.channels,
+src/components/app/overview/quick-actions.tsx:81:      label: t.app.overview.quickActions.topUp,
+src/components/app/overview/quick-actions.tsx:87:      label: t.app.overview.quickActions.quest,
+src/components/app/overview/quick-actions.tsx:96:      label: t.app.overview.quickActions.upgradeOpBuff,
+src/components/app/overview/quick-actions.tsx:104:    <section aria-label={t.app.overview.quickActions.title}>
+src/components/app/overview/quick-actions.tsx:130:            <span>{a.label}</span>
+src/components/app/overview/recent-activity.tsx:25:  label?: string | null;
+src/components/app/overview/recent-activity.tsx:101:          s.label ??
+src/components/app/overview/today-stats.tsx:13: * - Fresh start (yesterday null): tampilkan label "Baru mulai" instead of trend %
+src/components/app/overview/today-stats.tsx:35:    <section aria-label={t.app.overview.todayStats.sectionTitle}>
+src/components/app/overview/today-stats.tsx:42:          label={t.app.overview.todayStats.taskCarry}
+src/components/app/overview/today-stats.tsx:52:          label={t.app.overview.todayStats.energyUsedLabel}
+src/components/app/overview/today-stats.tsx:62:          label={t.app.overview.todayStats.channelsLabel}
+src/components/app/overview/today-stats.tsx:82:          label={t.app.overview.todayStats.agentsLabel}
+src/components/app/overview/today-stats.tsx:108:  label,
+src/components/app/overview/today-stats.tsx:118:  label: string;
+src/components/app/overview/today-stats.tsx:147:          {label}
+src/components/app/overview/today-stats.tsx:178:            {trend.label}

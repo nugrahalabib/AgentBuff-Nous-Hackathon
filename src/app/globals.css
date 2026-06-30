@@ -1,0 +1,397 @@
+@import "tailwindcss";
+@import "highlight.js/styles/github-dark.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --font-sans: var(--font-sans), "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+}
+
+/* Light mode (default) — warm, consumer-friendly */
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #6366f1;
+  --destructive: #ef4444;
+  --success: #10b981;
+  --success-foreground: #ffffff;
+}
+
+/* Dark mode */
+.dark {
+  --background: #09090b;
+  --foreground: #f8fafc;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --primary: #818cf8;
+  --primary-foreground: #ffffff;
+  --secondary: #1e293b;
+  --secondary-foreground: #f8fafc;
+  --accent: #1e293b;
+  --accent-foreground: #f8fafc;
+  --card: #0f172a;
+  --card-foreground: #f8fafc;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #818cf8;
+  --destructive: #ef4444;
+  --success: #34d399;
+  --success-foreground: #022c22;
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  /* Blanket motion-safety reset: neutralizes CSS animations (marquee, pulse,
+   * shimmer) and transitions for users who ask for reduced motion. Framer
+   * Motion (JS-driven inline transforms) is handled separately via
+   * <MotionConfig reducedMotion="user"> on the landing tree. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
+}
+
+/* Hide scrollbar for carousel elements */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Slim scrollbar untuk surface gelap (sidebar, panel internal /app, dst).
+ * 6px lebar, thumb subtle yang baru muncul "punchy" saat element hover.
+ * Padding inset via border-transparent + background-clip biar thumb terlihat
+ * floating di dalam track, tidak menempel ke tepi container. */
+.scrollbar-slim {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+  scrollbar-gutter: stable;
+}
+.scrollbar-slim::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-slim::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-slim::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  transition: background-color 0.15s ease;
+}
+.scrollbar-slim:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+.scrollbar-slim::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(34, 211, 238, 0.35);
+}
+.scrollbar-slim::-webkit-scrollbar-thumb:active {
+  background-color: rgba(34, 211, 238, 0.55);
+}
+.scrollbar-slim::-webkit-scrollbar-corner {
+  background: transparent;
+}
+/* Firefox fallback when hovered (Firefox tidak punya pseudo-class buat
+ * scrollbar individu, jadi pakai parent :hover + scrollbar-color). */
+.scrollbar-slim:hover {
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+/* Skeleton loader utility untuk dashboard placeholders.
+ * - Subtle shimmer dari kiri ke kanan (1.4s loop)
+ * - Color match deep-space bg dengan slight cyan hint
+ * - Gak ada layout shift saat data arrive (caller set width/height)
+ */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+ * AgentBuff /app surface — M7 polish tokens.
+ *
+ * These utilities are additive: they're ONLY applied via explicit class
+ * names in /app components, so landing page / basecamp / legal / auth
+ * surfaces remain untouched. Palette: cyan-300 → indigo-400 → fuchsia-500
+ * per CLAUDE.md §10.
+ *
+ * All color-mix / backdrop-filter usage is checked against the browsers
+ * Next 16 supports by default (Chrome 111+, Safari 16.4+, FF 113+). Safari
+ * backdrop-filter needs the -webkit- prefix; every modern browser gets the
+ * unprefixed form.
+ * ────────────────────────────────────────────────────────────────────── */
+@layer utilities {
+
+  /* LiveActivityBar — pulsing fuchsia glow around the bar so the user's
+     eye gets pulled to the agent's busy state without overlapping
+     gradients fighting for attention. CSS keyframes because Framer
+     Motion v12 doesn't reliably animate multi-shadow box-shadow strings. */
+  .agentbuff-bar-glow {
+    animation: agentbuff-bar-glow 2.2s ease-in-out infinite;
+  }
+  @keyframes agentbuff-bar-glow {
+    0%,
+    100% {
+      box-shadow:
+        0 0 0 0 rgba(217, 70, 239, 0),
+        0 12px 32px -8px rgba(217, 70, 239, 0.25);
+    }
+    50% {
+      box-shadow:
+        0 0 0 4px rgba(217, 70, 239, 0.2),
+        0 18px 44px -8px rgba(217, 70, 239, 0.5);
+    }
+  }
+
+  /* Left-rail glow pulse for the bar. */
+  .agentbuff-bar-rail {
+    animation: agentbuff-bar-rail 1.6s ease-in-out infinite;
+  }
+  @keyframes agentbuff-bar-rail {
+    0%,
+    100% {
+      opacity: 0.8;
+      box-shadow: 0 0 8px rgba(217, 70, 239, 0.55);
+    }
+    50% {
+      opacity: 1;
+      box-shadow: 0 0 18px rgba(217, 70, 239, 0.95);
+    }
+  }
+
+  /* Stop button breathing red halo. */
+  .agentbuff-stop-glow {
+    animation: agentbuff-stop-glow 1.6s ease-in-out infinite;
+  }
+  @keyframes agentbuff-stop-glow {
+    0%,
+    100% {
+      box-shadow: 0 6px 14px -4px rgba(239, 68, 68, 0.4);
+    }
+    50% {
+      box-shadow: 0 8px 22px -4px rgba(239, 68, 68, 0.75);
+    }
+  }
+
+  /* Horizontal shimmer sweep — used for top/bottom hairlines on the bar
+     and for the stop button's internal highlight. */
+  .agentbuff-shimmer-sweep {
+    animation: agentbuff-shimmer-sweep 2.4s ease-in-out infinite;
+  }
+  .agentbuff-shimmer-sweep-delayed {
+    animation: agentbuff-shimmer-sweep 2.4s ease-in-out infinite;
+    animation-delay: 1.2s;
+  }
+  @keyframes agentbuff-shimmer-sweep {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(400%);
+    }
+  }
+
+  /* Twinkle for the bar's sparkle dots — random offsets per dot via
+     `animation-delay` inline style. */
+  .agentbuff-sparkle-twinkle {
+    animation: agentbuff-sparkle-twinkle 1.4s ease-in-out infinite;
+  }
+  @keyframes agentbuff-sparkle-twinkle {
+    0%,
+    100% {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  /* Elapsed badge pulse — subtle inner glow ring. */
+  .agentbuff-elapsed-glow {
+    animation: agentbuff-elapsed-glow 1.8s ease-in-out infinite;
+  }
+  @keyframes agentbuff-elapsed-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 0 rgba(217, 70, 239, 0);
+    }
+    50% {
+      box-shadow: 0 0 14px rgba(217, 70, 239, 0.55);
+    }
+  }
+
+  /* Typing dot bounce — three dots staggered via inline animation-delay. */
+  .agentbuff-typing-bounce {
+    animation: agentbuff-typing-bounce 1s ease-in-out infinite;
+  }
+  @keyframes agentbuff-typing-bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.65;
+    }
+    50% {
+      transform: translateY(-4px);
+      opacity: 1;
+    }
+  }
+
+  /* Stop button internal shimmer */
+  .agentbuff-stop-shimmer {
+    animation: agentbuff-stop-shimmer 1.8s ease-in-out infinite;
+  }
+  @keyframes agentbuff-stop-shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Bar inner ambient glow (left + right radials) — opacity breath. */
+  .agentbuff-bar-ambient {
+    animation: agentbuff-bar-ambient 2.4s ease-in-out infinite;
+  }
+  @keyframes agentbuff-bar-ambient {
+    0%,
+    100% {
+      opacity: 0.65;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  /* One-shot entrance for re-keyed elements (kaomoji + verb) */
+  .agentbuff-fade-in {
+    animation: agentbuff-fade-in 0.35s ease-out;
+  }
+  @keyframes agentbuff-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-3px) scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .agentbuff-bar-glow,
+    .agentbuff-bar-rail,
+    .agentbuff-stop-glow,
+    .agentbuff-shimmer-sweep,
+    .agentbuff-shimmer-sweep-delayed,
+    .agentbuff-sparkle-twinkle,
+    .agentbuff-elapsed-glow,
+    .agentbuff-typing-bounce,
+    .agentbuff-stop-shimmer,
+    .agentbuff-bar-ambient,
+    .agentbuff-fade-in {
+      animation: none;
+    }
+  }
+}

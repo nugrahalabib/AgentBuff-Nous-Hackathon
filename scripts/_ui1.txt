@@ -1,0 +1,14 @@
+### app routes (folder under src/app) ###
+src/app/app/page.tsx
+src/app/basecamp/page.tsx
+src/app/loby/page.tsx
+src/app/page.tsx
+src/app/patch-notes/page.tsx
+src/app/privacy/page.tsx
+src/app/terms/page.tsx
+
+### app sidebar / nav tab definitions ###
+src/components/app/app-sidebar.tsx:44:const HREF_BY_ID: Record<string, string> = {
+src/components/app/app-sidebar.tsx:143:    async (key: string, nextLabel: string) => {
+src/components/app/app-sidebar.tsx:496:  onCommitRename: (label: string) => void;
+src/components/app/app-sidebar.tsx:703:  onCommit: (label: string) => void;

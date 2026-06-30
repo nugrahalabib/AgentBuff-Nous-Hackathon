@@ -1,0 +1,17 @@
+### 1) Apakah SKILL.md di volume itu FILE beneran atau symlink ke package? ###
+total 56
+drwxr-xr-x 2 hermes hermes  4096 May 20 16:49 .
+drwxr-xr-x 9 hermes hermes  4096 May 30 16:57 ..
+-rwxr-xr-x 1 hermes hermes 45986 May 20 16:49 SKILL.md
+---
+/home/hermes/.hermes/skills/autonomous-ai-agents/hermes-agent
+
+### 2) Apakah ada COPY identik di pip package (site-packages)? = sumber seed ###
+--- any skills dir in package? ---
+
+### 3) HERMES_HOME + apakah skills/ itu di mounted volume? ###
+HERMES_HOME=/home/hermes/.hermes
+/dev/sdd on /home/hermes/.hermes type ext4 (rw,relatime)
+---df of skills dir---
+/dev/sdd       1055762868 26587984 975471412   3% /home/hermes/.hermes
+DONE1

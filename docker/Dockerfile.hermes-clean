@@ -1,0 +1,86 @@
+# =============================================================================
+# VANILLA Hermes — clean reference image (NO AgentBuff layer)
+# =============================================================================
+# Purpose: see what stock Hermes 0.16.0 looks/behaves like out of the box, to
+# compare against our customised `hermes-agent:local` (bridge + plugins +
+# rebrand). This image deliberately contains:
+#   - hermes-agent 0.16.0 (same engine version as :local)
+#   - ONLY Hermes' OWN assets the pip wheel omits (ui-tui + dashboard_auth) so
+#     the NATIVE dashboard can actually boot — these are upstream Hermes, NOT
+#     AgentBuff features.
+# It deliberately does NOT contain:
+#   - the AgentBuff bridge, agentbuff-multichannel / agentbuff-multimodal
+#     plugins, persona patch, rebrand, or seeded skills.
+# Run: serves Hermes' native dashboard (web UI) on 9119 so it can be opened in
+# a browser and explored.
+#
+# Build:
+#   docker build -t hermes-agent:clean-0.16.0 -f docker/Dockerfile.hermes-clean .
+# =============================================================================
+FROM python:3.11.10-slim-bookworm AS base
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates git curl gnupg ripgrep ffmpeg \
+        libsndfile1 libsm6 libxext6 tini \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && rm -rf /var/lib/apt/lists/* \
+    && node --version && npm --version
+
+FROM base AS app
+
+ARG HERMES_UID=10001
+ARG HERMES_GID=10001
+RUN groupadd --gid ${HERMES_GID} hermes \
+    && useradd --uid ${HERMES_UID} --gid ${HERMES_GID} \
+               --home-dir /home/hermes --create-home --shell /bin/bash hermes
+
+ARG HERMES_VERSION=0.16.0
+RUN pip install --no-cache-dir "hermes-agent[messaging,web,pty]==${HERMES_VERSION}"
+
+# Vendor ONLY Hermes' own ui-tui + dashboard_auth (wheel omits both). CalVer
+# repo → the semver branch never matches, so we fall through to HEAD.
+RUN set -eux; \
+    git clone --depth=1 --branch "v${HERMES_VERSION}" --filter=blob:none --no-checkout \
+        https://github.com/NousResearch/hermes-agent.git /tmp/hermes-src \
+        || git clone --depth=1 --filter=blob:none --no-checkout \
+            https://github.com/NousResearch/hermes-agent.git /tmp/hermes-src; \
+    cd /tmp/hermes-src; \
+    git sparse-checkout init --cone; \
+    git sparse-checkout set ui-tui hermes_cli/dashboard_auth; \
+    git checkout HEAD; \
+    mkdir -p /opt/hermes-ui-tui; \
+    cp -r ui-tui/. /opt/hermes-ui-tui/; \
+    SITE_HERMES_CLI="$(cd / && python -c 'import hermes_cli, os; print(os.path.dirname(hermes_cli.__file__))')"; \
+    cp -r /tmp/hermes-src/hermes_cli/dashboard_auth "$SITE_HERMES_CLI/dashboard_auth"; \
+    ( cd / && python -c "import hermes_cli.dashboard_auth" ) && echo "dashboard_auth OK"; \
+    cd /opt/hermes-ui-tui; \
+    npm install --no-fund --no-audit --silent --progress=false; \
+    npm run build 2>&1 | tail -5; \
+    test -f dist/entry.js || (echo "ui-tui build failed" && exit 1); \
+    rm -rf /tmp/hermes-src /opt/hermes-ui-tui/.git
+ENV HERMES_TUI_DIR=/opt/hermes-ui-tui
+
+# Minimal native-dashboard launcher (NO AgentBuff bridge). Serves stock Hermes
+# dashboard on 0.0.0.0:9119 with --insecure for easy local viewing.
+COPY --chown=root:root docker/hermes-clean-entrypoint.sh /app/entrypoint.sh
+RUN chmod 0755 /app/entrypoint.sh
+
+USER hermes
+ENV HOME=/home/hermes \
+    HERMES_HOME=/home/hermes/.hermes \
+    PATH=/home/hermes/.local/bin:${PATH} \
+    LOG_LEVEL=INFO
+WORKDIR /home/hermes
+RUN mkdir -p /home/hermes/.hermes
+
+EXPOSE 9119
+ENTRYPOINT ["/usr/bin/tini", "--", "/app/entrypoint.sh"]

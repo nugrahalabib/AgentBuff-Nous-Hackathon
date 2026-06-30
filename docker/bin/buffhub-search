@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# buffhub-search <keyword> — search the AgentBuff BuffHub marketplace and print
+# ONE fenced ```agentbuff-skills``` block that the portal renders as cards.
+# The keyword is the ONLY argument; the server (?q=) does the filtering so the
+# result is always relevant. Empty keyword = show everything.
+KW="${1:-}"
+curl -s --max-time 10 "http://host.docker.internal:617/api/skills/buffhub?q=${KW}" \
+  | python3 -c '
+import sys, json
+try:
+    data = json.load(sys.stdin)
+except Exception:
+    data = {"skills": []}
+out = []
+for s in data.get("skills", [])[:6]:
+    out.append({
+        "name": s.get("name", ""),
+        "slug": s.get("slug", ""),
+        "priceRp": int(s.get("priceRp", 0) or 0),
+        "tagline": s.get("tagline", "") or (s.get("description", "")[:120]),
+        "description": s.get("description", ""),
+        "status": "available" if s.get("status") == "available" else "coming_soon",
+        "category": s.get("category", ""),
+    })
+print("```agentbuff-skills")
+print(json.dumps({"skills": out}, ensure_ascii=False))
+print("```")
+'

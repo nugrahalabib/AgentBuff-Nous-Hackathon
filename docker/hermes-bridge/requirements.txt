@@ -1,0 +1,90 @@
+# AgentBuff Hermes Bridge — Python dependencies
+#
+# Pinned EXACT versions (no ranges) per Hermes pyproject.toml policy
+# (post Mini Shai-Hulud worm 2026-05-12). A new transitive only reaches
+# our container via an intentional bump in this file.
+#
+# When adding/upgrading: pin to ==X.Y.Z, regenerate lockfile if you
+# adopt one. Don't introduce >= ranges without written justification.
+
+# WebSocket server (async, modern API, type hints)
+websockets==13.1
+
+# FastAPI form-data parser. Hermes 0.16.0's `hermes dashboard` web server
+# (hermes_cli.web_server) mounts the kanban plugin API routes which declare
+# multipart/form-data endpoints; FastAPI raises at route-registration time if
+# python-multipart is absent, taking down the whole dashboard (:9119). The pip
+# wheel's [web] extra does NOT pull it in, so we install it explicitly. (Harmless
+# on 0.15.2 where the kanban routes don't require it.)
+python-multipart==0.0.20
+
+# YAML config file parsing (Hermes config.yaml)
+PyYAML==6.0.3
+
+# Async HTTP client (energy balance pre-flight check to portal)
+httpx[socks]==0.28.1
+
+# Cron expression parsing (for cron tab data passthrough)
+croniter==6.0.0
+
+# psutil for process management (Windows + Linux + macOS compatible)
+# Used for graceful shutdown of Hermes subprocess
+psutil==7.2.2
+
+# pydantic for runtime schema validation on RPC payloads (catches bugs at boundary)
+pydantic==2.12.5
+
+# tenacity for exponential backoff on Hermes subprocess restart
+tenacity==9.1.4
+
+# Document text extraction (used by agentbuff-multimodal Hermes plugin
+# + bridge attachment_preprocessor for /app uploads). One pip install
+# covers BOTH the bridge process and the Hermes process — same Python
+# env in the container (Dockerfile.hermes installs hermes-agent +
+# bridge deps into the same site-packages).
+#
+# Why each is here:
+#   pdfplumber  — preferred PDF text extraction (better layout preservation)
+#   pypdf       — fallback if pdfplumber's pdfminer transitive fails to parse
+#   python-docx — .docx (Word 2007+) text extraction
+#   openpyxl    — .xlsx (Excel 2007+) cell extraction
+#   python-pptx — .pptx (PowerPoint 2007+) slide text extraction
+#
+# These let chief drop ANY common office doc into the agent and get
+# its content extracted as text WITHOUT relying on the active chat
+# model having native PDF support. Anthropic + Gemini still get
+# native passthrough (no extraction); everyone else gets text inline.
+pdfplumber==0.11.5
+pypdf==5.1.0
+python-docx==1.1.2
+openpyxl==3.1.5
+python-pptx==1.0.2
+
+# Microsoft Edge TTS — kept for compatibility / future upstream fix.
+# CURRENTLY BROKEN at the library layer (2026-05-23): Microsoft rotated
+# the `TrustedClientToken` + `Sec-MS-GEC` policy and edge-tts 6.1.19's
+# hardcoded token now returns `403 Forbidden` at WebSocket handshake.
+# Until the upstream library patches this, the AgentBuff multimodal
+# plugin demotes `edge` to Tier 99 fallback. Kept installed so if a
+# future bump fixes the auth, no rebuild needed — just flip config.
+edge-tts==6.1.19
+
+# Google Translate TTS — primary text_to_speech provider after
+# edge-tts broke (Bug 4 fix, 2026-05-23). FREE, no API key, no auth,
+# supports Indonesian (id-ID) + 50+ other languages, works behind any
+# firewall (uses public `translate.google.com` endpoint). Lightweight
+# package (~50KB). Registered by the agentbuff-multimodal plugin's
+# `tts_providers.py` extension which monkey-patches Hermes' text_to_speech
+# tool dispatch table at plugin load (mirror of the 7-provider STT
+# extension that already ships in v3.0.0 of the plugin).
+gTTS==2.5.4
+
+# WhatsApp per-agent pairing: render Baileys QR string to SVG data URL (server-side)
+qrcode>=7.4
+
+# Google Chat per-agent channel: native adapter uses googleapiclient + google-auth
+# + google-cloud-pubsub (inbound messages arrive via a Pub/Sub PULL subscription;
+# without pubsub the GC adapter sets GOOGLE_CHAT_AVAILABLE=False and never connects).
+google-api-python-client>=2.100
+google-auth>=2.30
+google-cloud-pubsub>=2.18

@@ -1,0 +1,11 @@
+### app page.tsx — how tabs are defined/rendered ###
+5:// /app lands on the chat tab by default. Layout already enforced auth +
+### or a workspace/shell component listing tabs ###
+src/components/app/agents/agent-roster.tsx
+src/components/app/agents/use-agents-data.ts
+src/components/app/tabs/agents-tab.tsx
+src/components/app/tabs/ai-agents-tab.tsx
+src/components/app/tabs/channels-tab.tsx
+src/components/app/tabs/cron-tab.tsx
+src/components/app/tabs/overview-tab.tsx
+src/components/app/tabs/usage-tab.tsx

@@ -1,0 +1,23 @@
+### find the main app tab list (Overview/Chat/Agents/Channels/etc) ###
+src/components/app/agents/agent-capability-wizard.tsx
+src/components/app/agents/agent-detail.tsx
+src/components/app/agents/agent-kemampuan-panel.tsx
+src/components/app/agents/agent-profil-panel.tsx
+src/components/app/agents/agent-roster.tsx
+src/components/app/agents/agent-rutinitas-panel.tsx
+src/components/app/agents/agent-saluran-panel.tsx
+src/components/app/agents/capability-requirements.ts
+src/components/app/agents/capability-tiers.ts
+src/components/app/agents/helpers.ts
+--- TAB definitions: search for nav arrays ---
+src/components/app/tabs/automation-tab.tsx:1168:              { id: "every", icon: Repeat, label: L.cronScheduleKindEvery },
+src/components/app/tabs/automation-tab.tsx:1169:              { id: "cron", icon: Settings, label: L.cronScheduleKindCron },
+src/components/app/tabs/automation-tab.tsx:1170:              { id: "at", icon: CalendarClock, label: L.cronScheduleKindAt },
+src/components/app/tabs/automation-tab.tsx:1258:                { id: "main", label: "main" },
+src/components/app/tabs/automation-tab.tsx:1259:                { id: "isolated", label: "isolated" },
+src/components/app/tabs/automation-tab.tsx:1260:                { id: "current", label: "current" },
+src/components/app/tabs/infrastructure-tab.tsx:745:    if (!health?.channels) return [] as Array<{ id: string; label: string; data: ChannelHealth }>;
+src/components/app/app-sidebar.tsx:180:        aria-label="Sidebar navigasi"
+src/components/app/app-sidebar.tsx:208:            aria-label="Toggle sidebar"
+src/components/app/app-sidebar.tsx:233:            aria-label={t.basecamp.sidebar.newThread}
+src/components/app/app-sidebar.tsx:447:                aria-label={t.basecamp.sidebar.logout}

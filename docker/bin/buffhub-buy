@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# buffhub-buy <slug> — purchase + install a skill from the BuffHub marketplace and
+# print ONE fenced ```agentbuff-purchase``` block that the portal renders as a card.
+# Slug is the ONLY argument.
+SLUG="${1:-}"
+# Loopback shared-secret is injected at provision time (docker.ts -> INTERNAL_BRIDGE_SECRET).
+# Never hardcode it here so the tracked source stays credential-free for a public repo.
+SECRET="${INTERNAL_BRIDGE_SECRET:-}"
+curl -s --max-time 20 -X POST http://host.docker.internal:617/api/internal/buffhub-buy \
+  -H "Content-Type: application/json" \
+  -H "X-Internal-Secret: ${SECRET}" \
+  -d "{\"slug\":\"${SLUG}\"}" \
+  | SLUG="$SLUG" python3 -c '
+import sys, json, os
+try:
+    r = json.load(sys.stdin)
+except Exception:
+    r = {}
+ok = bool(r.get("ok"))
+block = {
+    "name": r.get("name") or os.environ.get("SLUG", ""),
+    "slug": os.environ.get("SLUG", ""),
+    "priceRp": int(r.get("amountRp") or 0),
+    "status": "purchased" if ok else "failed",
+    "icon": "Store",
+}
+if r.get("webAppUrl"):
+    block["webAppUrl"] = r.get("webAppUrl")
+if r.get("receiptRef"):
+    block["receiptRef"] = r.get("receiptRef")
+if r.get("paidAt"):
+    block["paidAt"] = r.get("paidAt")
+if r.get("stripePaymentIntent"):
+    block["paymentRef"] = r.get("stripePaymentIntent")
+print("```agentbuff-purchase")
+print(json.dumps(block, ensure_ascii=False))
+print("```")
+'

@@ -1,0 +1,1751 @@
+{
+  "skills": [
+    {
+      "name": "apple-notes",
+      "source": "apple",
+      "descId": "Create, read, search, and manage notes in Apple Notes via CLI (macOS). Great for organizing ideas, to-dos, or note archives that sync to iPhone/iPad.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "apple-reminders",
+      "source": "apple",
+      "descId": "Create and manage reminders in Apple Reminders (macOS) that sync across all Apple devices. Perfect for setting to-dos with deadlines.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "findmy",
+      "source": "apple",
+      "descId": "Track the location of Apple devices and AirTags via Find My (macOS). Useful for finding your phone, keys, or items tagged with AirTag.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "imessage",
+      "source": "apple",
+      "descId": "Send and read iMessage/SMS via the Messages app (macOS). Great for replying to chats or sending automated notifications.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "macos-computer-use",
+      "source": "apple",
+      "descId": "Control your macOS desktop in the background (screenshot, click, type, scroll) without disturbing your cursor. Useful for automating apps that have no API.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "claude-code",
+      "source": "autonomous-ai-agents",
+      "descId": "Delegate coding tasks to the Claude Code CLI (build features, refactor, PRs). Perfect for automated coding via agent.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Claude Code CLI + auth",
+        "kind": "cli",
+        "envKey": "ANTHROPIC_API_KEY",
+        "steps": [
+          "Install: npm install -g @anthropic-ai/claude-code",
+          "Auth: run claude (OAuth Pro/Max) or set ANTHROPIC_API_KEY",
+          "Verify: claude auth status",
+          "Let the agent know once the CLI is ready"
+        ],
+        "chatPrompt": "I want to use Claude Code. Please guide me through installing the CLI and setting up auth step-by-step.",
+        "docsUrl": "https://code.claude.com/docs/en/cli-reference"
+      }
+    },
+    {
+      "name": "codex",
+      "source": "autonomous-ai-agents",
+      "descId": "Delegate coding tasks to the OpenAI Codex CLI (features, refactor, PR review). For automated coding inside a git repo.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Codex CLI + OpenAI auth",
+        "kind": "cli",
+        "envKey": "OPENAI_API_KEY",
+        "steps": [
+          "Install: npm install -g @openai/codex",
+          "Auth: set OPENAI_API_KEY or log in via Codex OAuth",
+          "Run inside a git repo (Codex requires a repo)",
+          "Let the agent know once the CLI is ready"
+        ],
+        "chatPrompt": "I want to use Codex. Please guide me through installing the CLI and setting up OpenAI auth step-by-step.",
+        "docsUrl": "https://github.com/openai/codex"
+      }
+    },
+    {
+      "name": "hermes-agent",
+      "source": "autonomous-ai-agents",
+      "descId": "Guide for setting up, configuring, and extending Hermes Agent (including spawning instances & multi-agent). For managing your own AI engine.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "kanban-codex-lane",
+      "source": "autonomous-ai-agents",
+      "descId": "Run Codex CLI as an isolated implementation lane within the Hermes kanban workflow. For executing coding tasks in parallel under controlled conditions.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Codex CLI + OpenAI auth",
+        "kind": "cli",
+        "envKey": "OPENAI_API_KEY",
+        "steps": [
+          "First set up Codex CLI + OpenAI auth",
+          "Ensure the repo can be checked out to an isolated git worktree",
+          "Prepare the Hermes kanban board",
+          "Let the agent know once ready"
+        ],
+        "chatPrompt": "I want to use the kanban Codex lane. Please guide me through setting up Codex CLI and worktree step-by-step.",
+        "docsUrl": null
+      }
+    },
+    {
+      "name": "opencode",
+      "source": "autonomous-ai-agents",
+      "descId": "Delegate coding tasks to the OpenCode CLI (provider-agnostic). For coding/refactoring/reviewing via an external agent.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: OpenCode CLI + provider key",
+        "kind": "cli",
+        "envKey": null,
+        "steps": [
+          "Install: npm i -g opencode-ai@latest",
+          "Auth: opencode auth login or set a provider key (e.g. OPENROUTER_API_KEY)",
+          "Verify: opencode auth list",
+          "Let the agent know once the CLI is ready"
+        ],
+        "chatPrompt": "I want to use OpenCode. Please guide me through installing the CLI and setting up a provider API key step-by-step.",
+        "docsUrl": "https://opencode.ai"
+      }
+    },
+    {
+      "name": "architecture-diagram",
+      "source": "creative",
+      "descId": "Generate dark-themed system/cloud/infrastructure architecture diagrams as HTML files. Great for technical documentation or design presentations.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "ascii-art",
+      "source": "creative",
+      "descId": "Create ASCII art (pyfiglet, cowsay, image-to-ASCII). Perfect for decorating READMEs, terminal banners, or just having creative fun.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "ascii-video",
+      "source": "creative",
+      "descId": "Convert video/audio into colorized ASCII video (MP4/GIF). For unique content or a quirky terminal aesthetic.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "baoyu-article-illustrator",
+      "source": "creative",
+      "descId": "Create supporting illustrations for articles with a consistent style and palette. Great for blogs or any content that needs visuals.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "baoyu-comic",
+      "source": "creative",
+      "descId": "Create knowledge comics (educational, biographical, tutorial). Perfect for social media content or easily digestible storytelling.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "baoyu-infographic",
+      "source": "creative",
+      "descId": "Create infographics from data or key points with a wide range of layout and style options. For shareable visual summaries.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "claude-design",
+      "source": "creative",
+      "descId": "Create high-quality one-shot HTML artifacts (landing pages, decks, prototypes). For rapid web UI demos.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "comfyui",
+      "source": "creative",
+      "descId": "Generate images, video, and audio using ComfyUI (Stable Diffusion). For creating customizable visual assets via workflows.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: ComfyUI installation",
+        "kind": "cli",
+        "envKey": null,
+        "steps": [
+          "Install ComfyUI via comfy-cli",
+          "Download the required models/checkpoints",
+          "Start the ComfyUI server",
+          "Let the agent know once it's running"
+        ],
+        "chatPrompt": "I want to generate images using ComfyUI. Please guide me through installing and starting the server step-by-step.",
+        "docsUrl": null
+      }
+    },
+    {
+      "name": "ideation",
+      "source": "creative",
+      "descId": "Generate project ideas through creative constraints. Useful when you're stuck searching for a new concept.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "design-md",
+      "source": "creative",
+      "descId": "Create and validate design token specification files (Google-style DESIGN.md). For documenting design systems.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "excalidraw",
+      "source": "creative",
+      "descId": "Create hand-drawn-style Excalidraw diagrams (architecture, flow, sequence) in JSON format. For quick wireframes or idea illustrations.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "humanizer",
+      "source": "creative",
+      "descId": "Make AI-generated text sound more natural and human (strips stiff AI style). Useful so your writing doesn't read as robotic.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "manim-video",
+      "source": "creative",
+      "descId": "Create 3Blue1Brown-style mathematical/explainer animation videos using Manim. Perfect for educational content.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "p5js",
+      "source": "creative",
+      "descId": "Create p5.js visual sketches (generative art, shaders, interactive, 3D). For web animations or code art.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "pixel-art",
+      "source": "creative",
+      "descId": "Create pixel art with retro-era palettes (NES, Game Boy, PICO-8). Perfect for game assets or retro icons.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "popular-web-designs",
+      "source": "creative",
+      "descId": "Reference 54 real-world design systems (Stripe, Linear, Vercel) as HTML/CSS. Useful when building modern web UIs.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "pretext",
+      "source": "creative",
+      "descId": "Create creative text-based browser demos (ASCII art, kinetic typography, text games) using pretext. For unique visual experiments.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "sketch",
+      "source": "creative",
+      "descId": "Create 2–3 one-shot HTML mockup variants for comparison. For quickly exploring design directions.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "songwriting-and-ai-music",
+      "source": "creative",
+      "descId": "Help write song lyrics and craft AI music prompts (Suno). Perfect for musicians or content creators.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "touchdesigner-mcp",
+      "source": "creative",
+      "descId": "Control TouchDesigner via MCP to create real-time visuals (operators, parameters, Python). For art installations or VJ sets.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: TouchDesigner + MCP",
+        "kind": "mcp",
+        "envKey": null,
+        "steps": [
+          "Install TouchDesigner",
+          "Install/enable the twozero MCP for TouchDesigner",
+          "Launch a TouchDesigner instance",
+          "Let the agent know once ready to connect"
+        ],
+        "chatPrompt": "I want to control TouchDesigner via MCP. Please guide me through setting up the connection step-by-step.",
+        "docsUrl": null
+      }
+    },
+    {
+      "name": "jupyter-live-kernel",
+      "source": "data-science",
+      "descId": "Run Python code iteratively in a live Jupyter kernel. Great for interactive data analysis.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "kanban-orchestrator",
+      "source": "devops",
+      "descId": "Playbook for the orchestrator role that splits and routes work to workers via a kanban board. For coordinating multiple agents.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "kanban-worker",
+      "source": "devops",
+      "descId": "Guide, examples, and pitfalls for Hermes kanban worker agents. For agents that pick up and complete tasks from the board.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "webhook-subscriptions",
+      "source": "devops",
+      "descId": "Manage webhook subscriptions so the agent runs automatically on events. For event-driven integrations between services.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "dogfood",
+      "source": "dogfood",
+      "descId": "Exploratory QA for web apps: find bugs, collect evidence, and generate a report. For testing app quality.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "himalaya",
+      "source": "email",
+      "descId": "Send and read email (IMAP/SMTP) via the Himalaya CLI. For managing your inbox directly from the agent.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: email account + Himalaya CLI",
+        "kind": "cli",
+        "envKey": null,
+        "steps": [
+          "Install the Himalaya CLI",
+          "Configure your email account (IMAP/SMTP) in the Himalaya config",
+          "Test sending/reading, then let the agent know"
+        ],
+        "chatPrompt": "I want to use the Himalaya email skill. Please guide me through installing the CLI and setting up my email account step-by-step.",
+        "docsUrl": "https://github.com/pimalaya/himalaya"
+      }
+    },
+    {
+      "name": "minecraft-modpack-server",
+      "source": "gaming",
+      "descId": "Host and manage a modded Minecraft server (CurseForge, Modrinth). For playing with friends using a modpack.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "pokemon-player",
+      "source": "gaming",
+      "descId": "Play Pokemon games autonomously via a headless emulator + RAM reading. For experimenting with AI game-playing.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "codebase-inspection",
+      "source": "github",
+      "descId": "Analyze codebase size and composition using pygount (LOC, languages, ratios). Useful when onboarding to a new project.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "github-auth",
+      "source": "github",
+      "descId": "Set up GitHub authentication (HTTPS token, SSH key, or gh CLI login). A prerequisite for other GitHub skills.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: GitHub CLI / token",
+        "kind": "cli",
+        "envKey": "GITHUB_TOKEN",
+        "steps": [
+          "Install GitHub CLI (gh) OR create a Personal Access Token at github.com/settings/tokens",
+          "Login: gh auth login, or set GITHUB_TOKEN / use an SSH key",
+          "Ensure access to the required repos",
+          "Let the agent know once logged in"
+        ],
+        "chatPrompt": "I want to connect GitHub. Please guide me through setting up the gh CLI or a Personal Access Token step-by-step.",
+        "docsUrl": "https://github.com/settings/tokens"
+      }
+    },
+    {
+      "name": "github-code-review",
+      "source": "github",
+      "descId": "Review Pull Requests on GitHub (diffs, inline comments) via gh or REST. For maintaining code quality.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: GitHub CLI / token",
+        "kind": "cli",
+        "envKey": "GITHUB_TOKEN",
+        "steps": [
+          "First set up github-auth (gh CLI or Personal Access Token)",
+          "Login: gh auth login or set GITHUB_TOKEN",
+          "Ensure access to the target repo",
+          "Let the agent know once ready"
+        ],
+        "chatPrompt": "I want to use this GitHub skill. Please guide me through setting up GitHub authentication (gh CLI / token) and repo access step-by-step.",
+        "docsUrl": "https://github.com/settings/tokens"
+      }
+    },
+    {
+      "name": "github-issues",
+      "source": "github",
+      "descId": "Create, triage, label, and assign GitHub issues via gh or REST. For tracking bugs and project tasks.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: GitHub CLI / token",
+        "kind": "cli",
+        "envKey": "GITHUB_TOKEN",
+        "steps": [
+          "First set up github-auth (gh CLI or Personal Access Token)",
+          "Login: gh auth login or set GITHUB_TOKEN",
+          "Ensure access to the target repo",
+          "Let the agent know once ready"
+        ],
+        "chatPrompt": "I want to use this GitHub skill. Please guide me through setting up GitHub authentication (gh CLI / token) and repo access step-by-step.",
+        "docsUrl": "https://github.com/settings/tokens"
+      }
+    },
+    {
+      "name": "github-pr-workflow",
+      "source": "github",
+      "descId": "Manage the GitHub Pull Request workflow (branch, commit, open PR, CI, merge). For team collaboration.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: GitHub CLI / token",
+        "kind": "cli",
+        "envKey": "GITHUB_TOKEN",
+        "steps": [
+          "First set up github-auth (gh CLI or Personal Access Token)",
+          "Login: gh auth login or set GITHUB_TOKEN",
+          "Ensure access to the target repo",
+          "Let the agent know once ready"
+        ],
+        "chatPrompt": "I want to use this GitHub skill. Please guide me through setting up GitHub authentication (gh CLI / token) and repo access step-by-step.",
+        "docsUrl": "https://github.com/settings/tokens"
+      }
+    },
+    {
+      "name": "github-repo-management",
+      "source": "github",
+      "descId": "Clone/create/fork GitHub repos and manage remotes and releases. For repository administration.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: GitHub CLI / token",
+        "kind": "cli",
+        "envKey": "GITHUB_TOKEN",
+        "steps": [
+          "First set up github-auth (gh CLI or Personal Access Token)",
+          "Login: gh auth login or set GITHUB_TOKEN",
+          "Ensure access to the target repo",
+          "Let the agent know once ready"
+        ],
+        "chatPrompt": "I want to use this GitHub skill. Please guide me through setting up GitHub authentication (gh CLI / token) and repo access step-by-step.",
+        "docsUrl": "https://github.com/settings/tokens"
+      }
+    },
+    {
+      "name": "native-mcp",
+      "source": "mcp",
+      "descId": "Connect the agent to an MCP server (stdio/HTTP) and register its tools. For extending capabilities via MCP connectors.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: MCP connector configuration",
+        "kind": "mcp",
+        "envKey": null,
+        "steps": [
+          "Identify the MCP server/connector (stdio or HTTP)",
+          "Fill in the connection configuration + required credentials",
+          "Give the configuration to the agent so its tools get registered"
+        ],
+        "chatPrompt": "I want to connect an MCP connector. Please guide me through setting up the configuration step-by-step.",
+        "docsUrl": null
+      }
+    },
+    {
+      "name": "gif-search",
+      "source": "media",
+      "descId": "Search and download GIFs from Tenor. Make chat replies or content more lively.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Tenor API key",
+        "kind": "api-key",
+        "envKey": "TENOR_API_KEY",
+        "steps": [
+          "Create a free Tenor API key in Google Cloud Console (Tenor API)",
+          "Set TENOR_API_KEY under Settings -> Env",
+          "Let the agent know once ready"
+        ],
+        "chatPrompt": "I want to use the GIF search skill (Tenor). Please guide me through creating a Tenor API key step-by-step.",
+        "docsUrl": "https://developers.google.com/tenor/guides/quickstart"
+      }
+    },
+    {
+      "name": "heartmula",
+      "source": "media",
+      "descId": "Generate songs from lyrics + tags using HeartMuLa (similar to Suno). For AI music creation.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: GPU to run the model",
+        "kind": "cli",
+        "envKey": null,
+        "steps": [
+          "Prepare a machine with a GPU (min 8GB VRAM)",
+          "Install HeartMuLa (heartlib) per the skill instructions",
+          "Download the model checkpoint",
+          "Let the agent know once ready"
+        ],
+        "chatPrompt": "I want to create songs using HeartMuLa. Please guide me through installing and setting up the model step-by-step.",
+        "docsUrl": null
+      }
+    },
+    {
+      "name": "songsee",
+      "source": "media",
+      "descId": "Generate spectrograms and analyze audio features (mel, chroma, MFCC) via CLI. For exploring and analyzing music.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "spotify",
+      "source": "media",
+      "descId": "Control Spotify playback and manage playlists (play, search, queue, device). For playing music through the agent.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Spotify account connection",
+        "kind": "oauth",
+        "envKey": null,
+        "steps": [
+          "Open the Hermes Spotify setup guide",
+          "Connect your Spotify account via the required flow",
+          "Make sure there is an active device (phone/desktop) for playback",
+          "Let the agent know once connected"
+        ],
+        "chatPrompt": "I want to use the Spotify skill. Please guide me through connecting my Spotify account step-by-step.",
+        "docsUrl": "https://hermes-agent.nousresearch.com/docs/user-guide/features/spotify"
+      }
+    },
+    {
+      "name": "youtube-content",
+      "source": "media",
+      "descId": "Turn YouTube transcripts into summaries, threads, or articles. For video research and content creation.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "evaluating-llms-harness",
+      "source": "mlops",
+      "descId": "Benchmark LLM capabilities using lm-eval-harness (MMLU, GSM8K, etc.). For model research and evaluation.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "weights-and-biases",
+      "source": "mlops",
+      "descId": "Track ML experiments with Weights & Biases (logs, sweeps, model registry). For monitoring model training.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: W&B account & API key",
+        "kind": "api-key",
+        "envKey": "WANDB_API_KEY",
+        "steps": [
+          "Sign up at wandb.ai",
+          "Grab your API key from wandb.ai/authorize",
+          "Set WANDB_API_KEY or run wandb login"
+        ],
+        "chatPrompt": "I want to use Weights & Biases. Please guide me through setting up the API key and logging in step-by-step.",
+        "docsUrl": "https://wandb.ai/authorize"
+      }
+    },
+    {
+      "name": "huggingface-hub",
+      "source": "mlops",
+      "descId": "Search, download, and upload models & datasets on Hugging Face Hub via CLI. For using and managing AI models.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Hugging Face token",
+        "kind": "api-key",
+        "envKey": "HF_TOKEN",
+        "steps": [
+          "Sign up / log in at huggingface.co",
+          "Go to Settings -> Access Tokens and create a token",
+          "Set HF_TOKEN or run hf auth login"
+        ],
+        "chatPrompt": "I want to use Hugging Face Hub. Please guide me through creating an access token and logging in step-by-step.",
+        "docsUrl": "https://huggingface.co/settings/tokens"
+      }
+    },
+    {
+      "name": "llama-cpp",
+      "source": "mlops",
+      "descId": "Run local LLM inference (GGUF) with llama.cpp. For running models efficiently without the cloud.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "obliteratus",
+      "source": "mlops",
+      "descId": "Remove model refusals via the diff-in-means technique (advanced research). For deep ML experimentation.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "serving-llms-vllm",
+      "source": "mlops",
+      "descId": "High-throughput LLM serving with vLLM (OpenAI-compatible API, quantization). For deploying high-performance models.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "audiocraft-audio-generation",
+      "source": "mlops",
+      "descId": "Generate music and sound effects from text using AudioCraft (MusicGen, AudioGen). For creating audio from descriptions.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "segment-anything-model",
+      "source": "mlops",
+      "descId": "Segment objects in images without training (SAM) via points, boxes, or masks. For automatic photo masking and editing.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "dspy",
+      "source": "mlops",
+      "descId": "Build declarative LLM programs and auto-optimize prompts (DSPy, including RAG). For programmatic prompt engineering.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "obsidian",
+      "source": "note-taking",
+      "descId": "Read, search, create, and edit notes in your Obsidian vault. For managing your personal knowledge base.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Obsidian vault (local)",
+        "kind": "account",
+        "envKey": null,
+        "steps": [
+          "Ensure your Obsidian vault exists on disk",
+          "Tell the agent the path to your vault folder",
+          "Make sure the agent has read/write permission to that folder"
+        ],
+        "chatPrompt": "I want to use the Obsidian skill. Please guide the agent to my vault folder and set up what's needed.",
+        "docsUrl": "https://obsidian.md"
+      }
+    },
+    {
+      "name": "airtable",
+      "source": "productivity",
+      "descId": "Work with Airtable data via the REST API (CRUD records, filter, upsert). For managing databases, inventories, or project trackers.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Airtable Personal Access Token",
+        "kind": "api-key",
+        "envKey": "AIRTABLE_API_KEY",
+        "steps": [
+          "Create a Personal Access Token at airtable.com/create/tokens (starts with pat...)",
+          "Grant scopes: data.records:read/write + schema.bases:read",
+          "Add the base you want to access to the token's access list",
+          "Paste the token into Settings -> Env (AIRTABLE_API_KEY) or give it to the agent"
+        ],
+        "chatPrompt": "I want to use the Airtable skill. Please guide me through setting up a Personal Access Token step-by-step.",
+        "docsUrl": "https://airtable.com/create/tokens"
+      }
+    },
+    {
+      "name": "google-workspace",
+      "source": "productivity",
+      "descId": "Access Gmail, Calendar, Drive, Docs, and Sheets. For managing email, schedules, and Google files.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Google Workspace OAuth",
+        "kind": "oauth",
+        "envKey": null,
+        "steps": [
+          "Create a project in Google Cloud Console",
+          "Enable the required APIs (Gmail/Drive/Calendar/Docs/Sheets)",
+          "Create OAuth credentials + complete the consent flow",
+          "Give the token to the agent (or set up via gws CLI)"
+        ],
+        "chatPrompt": "I want to connect Google Workspace (Gmail/Drive/Calendar). Please guide me through the OAuth setup step-by-step.",
+        "docsUrl": "https://console.cloud.google.com"
+      }
+    },
+    {
+      "name": "linear",
+      "source": "productivity",
+      "descId": "Manage issues, projects, and teams in Linear via GraphQL. For teams to organize sprints and tasks.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Linear API key",
+        "kind": "api-key",
+        "envKey": "LINEAR_API_KEY",
+        "steps": [
+          "Open Linear Settings -> Account -> Security & access -> Personal API keys",
+          "Create a new key and copy it",
+          "Paste it into Settings -> Env (LINEAR_API_KEY) or give it to the agent"
+        ],
+        "chatPrompt": "I want to use the Linear skill. Please guide me through setting up a Personal API key step-by-step.",
+        "docsUrl": "https://linear.app/settings/account/security"
+      }
+    },
+    {
+      "name": "maps",
+      "source": "productivity",
+      "descId": "Geocoding, POI search, routing, and time zones via OpenStreetMap/OSRM. For navigation or location research.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "nano-pdf",
+      "source": "productivity",
+      "descId": "Edit text/typos/headings in PDF files via natural language commands (nano-pdf). For quick PDF corrections.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "notion",
+      "source": "productivity",
+      "descId": "Read and manage Notion pages & databases (markdown, Workers). For organizing notes, wikis, or project trackers.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Notion API key",
+        "kind": "api-key",
+        "envKey": "NOTION_API_KEY",
+        "steps": [
+          "Create an integration at notion.so/my-integrations",
+          "Copy the Internal Integration Token (starts with ntn_ or secret_)",
+          "Share the page/database you want to use with that integration",
+          "Paste the token into Settings -> Env (NOTION_API_KEY) or give it to the agent"
+        ],
+        "chatPrompt": "I want to use the Notion skill. Please guide me through setting up the API key step-by-step and what I need to prepare.",
+        "docsUrl": "https://www.notion.so/my-integrations"
+      }
+    },
+    {
+      "name": "ocr-and-documents",
+      "source": "productivity",
+      "descId": "Extract text from PDFs and scanned images (pymupdf, marker-pdf). For digitizing receipts, invoices, or documents.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "powerpoint",
+      "source": "productivity",
+      "descId": "Create, read, and edit .pptx presentations (slides, notes, templates). For quick pitch decks or presentation materials.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "teams-meeting-pipeline",
+      "source": "productivity",
+      "descId": "Run a Microsoft Teams meeting summary pipeline (summarize, check status, replay). For automatic meeting notes.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "godmode",
+      "source": "red-teaming",
+      "descId": "LLM jailbreak techniques (Parseltongue, GODMODE) for testing model robustness. For AI security research.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "arxiv",
+      "source": "research",
+      "descId": "Search, download, and manage academic papers from arXiv (keyword, author, category, ID). Great for research, literature reviews, or gathering citations.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "blogwatcher",
+      "source": "research",
+      "descId": "Monitor blogs and RSS/Atom feeds for new updates via blogwatcher-cli. For automatically following your favorite sources.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "llm-wiki",
+      "source": "research",
+      "descId": "Build and query an interconnected markdown knowledge base (Karpathy-style LLM Wiki). For organized knowledge notes.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "polymarket",
+      "source": "research",
+      "descId": "View Polymarket prediction market data (markets, prices, order book, history). For researching event odds and probabilities.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "research-paper-writing",
+      "source": "research",
+      "descId": "Help write ML papers for conferences (NeurIPS/ICML/ICLR) from design to submission. For researchers and students putting together academic writing.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "openhue",
+      "source": "smart-home",
+      "descId": "Control Philips Hue lights, scenes, and rooms via the OpenHue CLI. For managing your home lighting through the agent.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Philips Hue Bridge + key",
+        "kind": "cli",
+        "envKey": null,
+        "steps": [
+          "Ensure the Hue Bridge is on the same network",
+          "Install the OpenHue CLI then run setup (press the physical button on the Bridge)",
+          "Save the Bridge credentials, then let the agent know"
+        ],
+        "chatPrompt": "I want to control my Philips Hue lights. Please guide me through pairing the Bridge via OpenHue CLI step-by-step.",
+        "docsUrl": "https://www.openhue.org"
+      }
+    },
+    {
+      "name": "xurl",
+      "source": "social-media",
+      "descId": "Access X (Twitter) via the xurl CLI (posting, search, DMs, media, API v2). For managing an account or fetching tweet data.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: X (Twitter) API via xurl",
+        "kind": "oauth",
+        "envKey": null,
+        "steps": [
+          "Sign up for X (Twitter) developer access and create an app",
+          "Obtain your OAuth credentials / bearer token",
+          "Configure the xurl CLI with those credentials",
+          "Let the agent know once ready"
+        ],
+        "chatPrompt": "I want to use the X/Twitter skill (xurl). Please guide me through setting up API/OAuth access step-by-step.",
+        "docsUrl": "https://developer.twitter.com"
+      }
+    },
+    {
+      "name": "debugging-hermes-tui-commands",
+      "source": "software-development",
+      "descId": "Guide for debugging Hermes TUI slash commands (Python, gateway, Ink UI). For internal agent development.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "hermes-agent-skill-authoring",
+      "source": "software-development",
+      "descId": "Guide for creating SKILL.md files in a repo (frontmatter, validator, structure). For developers adding new skills.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "node-inspect-debugger",
+      "source": "software-development",
+      "descId": "Debug Node.js applications via --inspect + Chrome DevTools Protocol. For hunting bugs in JavaScript code.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "plan",
+      "source": "software-development",
+      "descId": "Plan mode: write a markdown plan to .hermes/plans/ without executing. For breaking big tasks into clear steps first.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "python-debugpy",
+      "source": "software-development",
+      "descId": "Debug Python code (pdb REPL + debugpy remote/DAP). For tracing errors step by step.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "requesting-code-review",
+      "source": "software-development",
+      "descId": "Pre-commit review: security scan, quality gate, auto-fix. For getting code feedback before committing.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "spike",
+      "source": "software-development",
+      "descId": "Throwaway experiments for validating ideas before full implementation. For quickly testing technical feasibility.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "subagent-driven-development",
+      "source": "software-development",
+      "descId": "Execute plans via delegate_task sub-agents with a 2-stage review. For accelerating complex development.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "systematic-debugging",
+      "source": "software-development",
+      "descId": "4-phase root-cause debugging: understand the bug before fixing it. For solving stubborn bugs systematically.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "test-driven-development",
+      "source": "software-development",
+      "descId": "Apply TDD (RED-GREEN-REFACTOR, tests before code). For more reliable results with fewer bugs.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "writing-plans",
+      "source": "software-development",
+      "descId": "Write implementation plans: small tasks, file paths, code examples. For clear project plan documentation.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "yuanbao",
+      "source": "yuanbao",
+      "descId": "Access Yuanbao (Tencent) groups: mention users, query info/members. For using the Yuanbao assistant and groups.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "blackbox",
+      "source": "autonomous-ai-agents",
+      "descId": "Delegate coding tasks to the Blackbox AI CLI (multi-model + auto-judge picks the best result). An alternative coding assistant.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Blackbox CLI + API key",
+        "kind": "api-key",
+        "envKey": null,
+        "steps": [
+          "Install the Blackbox CLI",
+          "Obtain your Blackbox AI API key",
+          "Set the API key, then let the agent know"
+        ],
+        "chatPrompt": "I want to use the Blackbox skill. Please guide me through installing the CLI and setting up the API key step-by-step.",
+        "docsUrl": null
+      }
+    },
+    {
+      "name": "honcho",
+      "source": "autonomous-ai-agents",
+      "descId": "Add persistent cross-session personal memory to Hermes using Honcho (user modeling, multi-profile isolation). So the agent remembers your preferences.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Honcho account & API key",
+        "kind": "api-key",
+        "envKey": null,
+        "steps": [
+          "Sign up at Honcho (honcho.dev)",
+          "Obtain your API key",
+          "Configure the Honcho memory backend in Hermes, then give the API key to the agent"
+        ],
+        "chatPrompt": "I want to use Honcho for agent memory. Please guide me through setting up the API key and configuration step-by-step.",
+        "docsUrl": "https://honcho.dev"
+      }
+    },
+    {
+      "name": "evm",
+      "source": "blockchain",
+      "descId": "Read EVM blockchain data (wallet, token, gas) across 8 chains, read-only. For checking balances and on-chain Ethereum info.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "hyperliquid",
+      "source": "blockchain",
+      "descId": "View market data and account history on Hyperliquid (perpetual DEX), read-only. For reviewing trading activity.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "solana",
+      "source": "blockchain",
+      "descId": "Query Solana blockchain data with USD prices (balances, tokens, transactions, NFTs, whales). For checking portfolios and Solana on-chain info.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "one-three-one-rule",
+      "source": "communication",
+      "descId": "The 1-3-1 communication framework: present 1 problem, 3 options, 1 recommendation. For concise, solution-oriented team communication.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "blender-mcp",
+      "source": "creative",
+      "descId": "Control Blender directly from the agent via blender-mcp (create 3D objects, materials, animations, run Python bpy). For creating and editing 3D assets.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Blender + blender-mcp addon",
+        "kind": "mcp",
+        "envKey": null,
+        "steps": [
+          "Install Blender",
+          "Install & enable the blender-mcp addon",
+          "Start the addon's socket connection",
+          "Let the agent know once Blender is ready to connect"
+        ],
+        "chatPrompt": "I want to control Blender via the blender-mcp skill. Please guide me through installing the addon and setting up the connection step-by-step.",
+        "docsUrl": null
+      }
+    },
+    {
+      "name": "concept-diagrams",
+      "source": "creative",
+      "descId": "Create minimalist dark-mode-aware SVG diagrams for educational concepts (physics, chemistry, anatomy, floor plans, etc.). For teaching materials or non-technical visuals.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "hyperframes",
+      "source": "creative",
+      "descId": "Create videos from HTML compositions (title cards, social overlays, audio-synced captions, TTS narration) using HyperFrames. For video content creation.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "kanban-video-orchestrator",
+      "source": "creative",
+      "descId": "Plan and monitor a multi-agent video production pipeline via Hermes kanban (writer, designer, animator, etc.). For producing complex videos.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "meme-generation",
+      "source": "creative",
+      "descId": "Create real meme images by picking a template and overlaying text (Pillow). Produces .png meme files for social media.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "inference-sh-cli",
+      "source": "devops",
+      "descId": "Run 150+ AI apps via the inference.sh CLI (image/video generation, LLMs, 3D, etc.). For accessing many AI models from a single CLI.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: inference.sh account + CLI",
+        "kind": "account",
+        "envKey": null,
+        "steps": [
+          "Sign up at inference.sh",
+          "Install the infsh CLI then log in",
+          "Let the agent know once ready"
+        ],
+        "chatPrompt": "I want to use inference.sh (infsh) to run AI apps. Please guide me through signing up and installing the CLI step-by-step.",
+        "docsUrl": "https://inference.sh"
+      }
+    },
+    {
+      "name": "docker-management",
+      "source": "devops",
+      "descId": "Manage Docker containers, images, volumes, networks, and Compose (lifecycle, debug, cleanup). For deploying and managing application environments.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Docker access",
+        "kind": "cli",
+        "envKey": null,
+        "steps": [
+          "Ensure Docker is installed and the daemon is running",
+          "Ensure the agent has access to the Docker socket",
+          "Let the agent know once Docker is ready"
+        ],
+        "chatPrompt": "I want to use the Docker management skill. Please guide me through verifying Docker access is ready step-by-step.",
+        "docsUrl": "https://docs.docker.com"
+      }
+    },
+    {
+      "name": "pinggy-tunnel",
+      "source": "devops",
+      "descId": "Expose localhost to the internet via a Pinggy SSH tunnel (zero-install). For local demos or receiving webhooks.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: SSH (Pinggy account optional)",
+        "kind": "account",
+        "envKey": null,
+        "steps": [
+          "This skill is zero-install via SSH; a basic tunnel can start immediately",
+          "For full features, sign up at pinggy.io and grab a token",
+          "Give the config/token to the agent if needed"
+        ],
+        "chatPrompt": "I want to expose a service via Pinggy tunnel. Please guide me through the setup step-by-step.",
+        "docsUrl": "https://pinggy.io"
+      }
+    },
+    {
+      "name": "watchers",
+      "source": "devops",
+      "descId": "Monitor RSS feeds, JSON APIs, and GitHub with dedup watermarking. For automations that react to updates.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "adversarial-ux-test",
+      "source": "dogfood",
+      "descId": "Roleplay as the most difficult, tech-averse user to uncover UX pain points, then distill them into real tickets. For user experience QA.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "agentmail",
+      "source": "email",
+      "descId": "Give the agent a dedicated email inbox via AgentMail (send, receive, manage email autonomously). So the agent has its own email address.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: AgentMail account & API key",
+        "kind": "api-key",
+        "envKey": null,
+        "steps": [
+          "Sign up at AgentMail (agentmail.to)",
+          "Obtain your API key",
+          "Set the API key + inbox address, or give them to the agent"
+        ],
+        "chatPrompt": "I want to use AgentMail so the agent has its own email. Please guide me through signing up and setting up the API key step-by-step.",
+        "docsUrl": "https://agentmail.to"
+      }
+    },
+    {
+      "name": "3-statement-model",
+      "source": "finance",
+      "descId": "Build an integrated 3-statement financial model (income statement, balance sheet, cash flow) in Excel. For business projections and analysis.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "comps-analysis",
+      "source": "finance",
+      "descId": "Build a comparable company analysis in Excel: operating metrics and valuation multiples. For stock/sector valuation.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "dcf-model",
+      "source": "finance",
+      "descId": "Build an institutional-quality DCF valuation model in Excel (FCF projections, WACC, terminal value, sensitivity). For intrinsic stock value analysis.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "excel-author",
+      "source": "finance",
+      "descId": "Create clean, auditable headless Excel workbooks (openpyxl): formulas, named ranges, balance checks. For financial models and reports.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "lbo-model",
+      "source": "finance",
+      "descId": "Build a leveraged buyout (LBO) model in Excel: sources & uses, debt schedule, IRR/MOIC. For private equity screening.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "merger-model",
+      "source": "finance",
+      "descId": "Build a merger model (accretion/dilution) in Excel: pro-forma, synergies, EPS impact. For M&A pitch analysis.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "pptx-author",
+      "source": "finance",
+      "descId": "Create headless PowerPoint decks (python-pptx) linked to workbook figures. For pitch decks or investment memos.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "stocks",
+      "source": "finance",
+      "descId": "Fetch quotes, history, and comparisons for stocks/crypto via Yahoo Finance. For quick investment research.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "fitness-nutrition",
+      "source": "health",
+      "descId": "Create a personalized fitness and nutrition plan. For tailored diet and workout programs.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "neuroskill-bci",
+      "source": "health",
+      "descId": "Experiment with brain-computer interfaces (BCI). For neurotechnology research and exploration.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "fastmcp",
+      "source": "mcp",
+      "descId": "Build, test, and deploy MCP servers using FastMCP (Python). For developers extending agent capabilities via custom tools/MCP.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: FastMCP server setup",
+        "kind": "mcp",
+        "envKey": null,
+        "steps": [
+          "Install FastMCP (pip install fastmcp)",
+          "Create/host your MCP server",
+          "Connect it to the agent via MCP configuration"
+        ],
+        "chatPrompt": "I want to build/connect an MCP server using FastMCP. Please guide me through the setup step-by-step.",
+        "docsUrl": "https://gofastmcp.com"
+      }
+    },
+    {
+      "name": "mcporter",
+      "source": "mcp",
+      "descId": "List, configure, authenticate, and call MCP servers/tools directly via the mcporter CLI (HTTP/stdio). For working with multiple MCPs.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: MCP server configuration",
+        "kind": "mcp",
+        "envKey": null,
+        "steps": [
+          "Identify the MCP server you want to use (HTTP or stdio)",
+          "Fill in the connection configuration (command/URL + credentials if needed)",
+          "Authenticate via mcporter if the server requires login",
+          "Give the configuration to the agent"
+        ],
+        "chatPrompt": "I want to connect an MCP server using mcporter. Please guide me through setting up the configuration step-by-step.",
+        "docsUrl": null
+      }
+    },
+    {
+      "name": "openclaw-migration",
+      "source": "migration",
+      "descId": "Migrate OpenClaw customizations (memory, SOUL.md, allowlist, skills) to Hermes. For moving from OpenClaw to Hermes.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "huggingface-accelerate",
+      "source": "mlops",
+      "descId": "Add distributed training support to PyTorch scripts in a few lines (Accelerate). For multi-GPU ML training.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "chroma",
+      "source": "mlops",
+      "descId": "Open-source vector database for storing embeddings and semantic search. For RAG features or document search.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "clip",
+      "source": "mlops",
+      "descId": "Match images with text using CLIP (zero-shot classification, retrieval). For image search or content moderation.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "faiss",
+      "source": "mlops",
+      "descId": "Ultra-fast billion-scale vector similarity search (FAISS, GPU-supported). For large-scale similarity search and retrieval.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "optimizing-attention-flash",
+      "source": "mlops",
+      "descId": "Speed up transformer attention 2–4x and reduce memory usage with Flash Attention. For optimizing model training and inference.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "guidance",
+      "source": "mlops",
+      "descId": "Constrain LLM output with regex/grammar to guarantee validity (JSON/XML/code) using Guidance. For guaranteed structured results.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "huggingface-tokenizers",
+      "source": "mlops",
+      "descId": "Ultra-fast text tokenization (Rust) using Hugging Face Tokenizers. For NLP preprocessing or training a custom vocabulary.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "outlines",
+      "source": "mlops",
+      "descId": "Generate structured LLM output (JSON/regex/Pydantic) using Outlines. For validated, consistent results.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "instructor",
+      "source": "mlops",
+      "descId": "Extract structured data from LLMs with Pydantic validation + automatic retries (Instructor). For type-safe JSON parsing.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "lambda-labs-gpu-cloud",
+      "source": "mlops",
+      "descId": "Rent on-demand/reserved cloud GPU instances on Lambda Labs via SSH. For model training and inference.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Lambda Labs account & API key",
+        "kind": "cloud",
+        "envKey": "LAMBDA_API_KEY",
+        "steps": [
+          "Sign up at lambdalabs.com",
+          "Grab your API key from the dashboard",
+          "Set LAMBDA_API_KEY or give it to the agent",
+          "Prepare an SSH key for instance access"
+        ],
+        "chatPrompt": "I want to use Lambda Labs GPU cloud. Please guide me through signing up and setting up the API key step-by-step.",
+        "docsUrl": "https://lambdalabs.com"
+      }
+    },
+    {
+      "name": "llava",
+      "source": "mlops",
+      "descId": "Use the LLaVA vision-language model to chat about images (VQA). For chatbots that can see and understand images.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "modal-serverless-gpu",
+      "source": "mlops",
+      "descId": "Run ML workloads on Modal's serverless GPU cloud. For deploying models/GPU functions without managing servers.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Modal account & token",
+        "kind": "cloud",
+        "envKey": null,
+        "steps": [
+          "Sign up at modal.com",
+          "Install the Modal CLI: pip install modal",
+          "Run modal token new to authenticate",
+          "Let the agent know once logged in"
+        ],
+        "chatPrompt": "I want to use Modal. Please guide me through signing up and setting up a token step-by-step.",
+        "docsUrl": "https://modal.com"
+      }
+    },
+    {
+      "name": "nemo-curator",
+      "source": "mlops",
+      "descId": "Curate and clean large datasets with GPU (dedup, quality filter, PII redaction) using NeMo Curator. For training data preparation.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "peft-fine-tuning",
+      "source": "mlops",
+      "descId": "Memory-efficient LLM fine-tuning (LoRA/QLoRA, 25+ methods) using PEFT. For training large models on limited GPUs.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "pinecone",
+      "source": "mlops",
+      "descId": "Managed production vector database (auto-scaling, hybrid search). For large-scale RAG, recommendations, or semantic search.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Pinecone API key",
+        "kind": "api-key",
+        "envKey": "PINECONE_API_KEY",
+        "steps": [
+          "Sign up at pinecone.io",
+          "Create a project then copy your API key",
+          "Set PINECONE_API_KEY or give it to the agent"
+        ],
+        "chatPrompt": "I want to use Pinecone. Please guide me through setting up the API key step-by-step.",
+        "docsUrl": "https://www.pinecone.io"
+      }
+    },
+    {
+      "name": "pytorch-fsdp",
+      "source": "mlops",
+      "descId": "Train large distributed models using PyTorch FSDP (parameter sharding, mixed precision). For large-scale training.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "pytorch-lightning",
+      "source": "mlops",
+      "descId": "Structure PyTorch training with Lightning (Trainer, distributed, callbacks). For cleaner, more scalable ML code.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "qdrant-vector-search",
+      "source": "mlops",
+      "descId": "High-performance vector search engine (Rust) for RAG and semantic search. For scalable vector storage and retrieval.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Qdrant endpoint/API key",
+        "kind": "api-key",
+        "envKey": "QDRANT_API_KEY",
+        "steps": [
+          "Run Qdrant locally (Docker) OR sign up for Qdrant Cloud",
+          "Obtain the URL + API key (if cloud)",
+          "Set QDRANT_API_KEY/URL or give them to the agent"
+        ],
+        "chatPrompt": "I want to use Qdrant. Please guide me through the setup (local or cloud) and API key step-by-step.",
+        "docsUrl": "https://qdrant.tech"
+      }
+    },
+    {
+      "name": "sparse-autoencoder-training",
+      "source": "mlops",
+      "descId": "Train and analyze Sparse Autoencoders (SAELens) to dissect internal model features. For interpretability research.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "simpo-training",
+      "source": "mlops",
+      "descId": "Fine-tune LLM preferences with SimPO (a DPO alternative without a reference model). For more efficient model alignment.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "slime-rl-training",
+      "source": "mlops",
+      "descId": "Post-train LLMs with RL using slime (Megatron+SGLang). For large-scale RL training research.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "stable-diffusion-image-generation",
+      "source": "mlops",
+      "descId": "Generate images from text using Stable Diffusion (Diffusers): text-to-image, inpainting, img2img. For creating illustrations and visual assets.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "tensorrt-llm",
+      "source": "mlops",
+      "descId": "Optimize LLM inference with NVIDIA TensorRT (maximum throughput, FP8/INT4 quantization). For ultra-fast serving on NVIDIA GPUs.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "distributed-llm-pretraining-torchtitan",
+      "source": "mlops",
+      "descId": "Native PyTorch distributed LLM pre-training with TorchTitan (4D parallelism). For training large models from scratch at scale.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "axolotl",
+      "source": "mlops",
+      "descId": "Fine-tune LLMs via YAML config (LoRA, DPO, GRPO) with Axolotl. Build custom models from your own datasets — no hassle.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "fine-tuning-with-trl",
+      "source": "mlops",
+      "descId": "Fine-tune and RLHF models with TRL (SFT, DPO, PPO, GRPO, reward modeling). Train models to match your preferences.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "unsloth",
+      "source": "mlops",
+      "descId": "Fine-tune LLMs 2–5x faster with lower VRAM (LoRA/QLoRA) using Unsloth. Train models even on limited GPUs.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "whisper",
+      "source": "mlops",
+      "descId": "Transcribe and translate audio to text (99 languages) with Whisper. Turn recordings, voice notes, and podcasts into written content.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Whisper installed",
+        "kind": "cli",
+        "envKey": null,
+        "steps": [
+          "Install Whisper (pip install openai-whisper) or whisper.cpp",
+          "Make sure ffmpeg is installed",
+          "Let the agent know once ready"
+        ],
+        "chatPrompt": "I want to transcribe audio with Whisper. Please guide me through installing Whisper and ffmpeg step-by-step.",
+        "docsUrl": "https://github.com/openai/whisper"
+      }
+    },
+    {
+      "name": "canvas",
+      "source": "productivity",
+      "descId": "Canvas LMS integration: pull course and assignment lists via API token. For students and instructors tracking their work.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Canvas LMS API token",
+        "kind": "api-key",
+        "envKey": null,
+        "steps": [
+          "Log in to your Canvas LMS",
+          "Go to Account -> Settings -> Approved Integrations -> New Access Token",
+          "Copy the token and note your institution URL",
+          "Share the token and URL with the agent"
+        ],
+        "chatPrompt": "I want to use the Canvas LMS skill. Please guide me through generating an access token step-by-step.",
+        "docsUrl": null
+      }
+    },
+    {
+      "name": "here.now",
+      "source": "productivity",
+      "descId": "Publish static sites to {slug}.here.now and store private files in cloud Drive. For fast hosting and inter-agent file handoff.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: here.now account",
+        "kind": "account",
+        "envKey": null,
+        "steps": [
+          "Sign up or log in to here.now",
+          "Complete the requested authentication",
+          "Let the agent know once ready"
+        ],
+        "chatPrompt": "I want to use the here.now skill to publish a site. Please guide me through setting up the account step-by-step.",
+        "docsUrl": null
+      }
+    },
+    {
+      "name": "memento-flashcards",
+      "source": "productivity",
+      "descId": "Create and manage flashcards for learning with spaced repetition. For students who want to memorize and schedule reviews.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "shop-app",
+      "source": "productivity",
+      "descId": "Search products, track orders, initiate returns, and reorder via Shop.app. Shop online through your agent.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Shop app account",
+        "kind": "account",
+        "envKey": null,
+        "steps": [
+          "Log in to your Shop account",
+          "Complete the authentication the skill requests",
+          "Let the agent know once logged in"
+        ],
+        "chatPrompt": "I want to use the Shop skill. Please guide me through logging in and the required setup step-by-step.",
+        "docsUrl": null
+      }
+    },
+    {
+      "name": "shopify",
+      "source": "productivity",
+      "descId": "Manage your Shopify store via GraphQL (products, orders, customers, inventory). Sell online through your agent.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Shopify store access token",
+        "kind": "api-key",
+        "envKey": null,
+        "steps": [
+          "Open Shopify admin -> Settings -> Apps -> Develop apps",
+          "Create a custom app and generate an Admin API access token",
+          "Set the access token and store domain, or share them with the agent"
+        ],
+        "chatPrompt": "I want to connect my Shopify store. Please guide me through creating a custom app and access token step-by-step.",
+        "docsUrl": "https://shopify.dev"
+      }
+    },
+    {
+      "name": "siyuan",
+      "source": "productivity",
+      "descId": "Search, read, create, and manage blocks and documents in SiYuan (self-hosted PKM). Build your personal knowledge base.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: SiYuan + API token",
+        "kind": "api-key",
+        "envKey": null,
+        "steps": [
+          "Run SiYuan (local or self-hosted)",
+          "Get the API token from Settings -> About",
+          "Share the URL and token with the agent"
+        ],
+        "chatPrompt": "I want to use SiYuan. Please guide me through setting up the API token step-by-step.",
+        "docsUrl": "https://b3log.org/siyuan"
+      }
+    },
+    {
+      "name": "telephony",
+      "source": "productivity",
+      "descId": "Give your agent phone capabilities: Twilio number, send/receive SMS/MMS, and AI voice calls (Bland.ai/Vapi). For voice notifications or OTP.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Twilio account (+ Bland.ai/Vapi)",
+        "kind": "account",
+        "envKey": null,
+        "steps": [
+          "Sign up for Twilio, get your Account SID + Auth Token, and provision a number",
+          "For AI calls: set up a Bland.ai or Vapi account",
+          "Share the credentials with the agent"
+        ],
+        "chatPrompt": "I want to use the telephony skill (SMS/calls). Please guide me through signing up for Twilio and setting up credentials step-by-step.",
+        "docsUrl": "https://www.twilio.com"
+      }
+    },
+    {
+      "name": "bioinformatics",
+      "source": "research",
+      "descId": "Gateway to 400+ bioinformatics skills (genomics, transcriptomics, variants, and more). For life-science research that pulls the right tools on demand.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "darwinian-evolver",
+      "source": "research",
+      "descId": "Optimize prompts, regex, SQL, and code through evolutionary loops (Imbue). Run experiments that automatically search for the best solution.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "domain-intel",
+      "source": "research",
+      "descId": "Passive domain recon (subdomains, SSL certificates, WHOIS, DNS) using Python stdlib — no API key needed. For research or domain due diligence.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "drug-discovery",
+      "source": "research",
+      "descId": "Assist with drug discovery research (molecule and compound analysis). For pharmaceutical research and computational chemistry.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "duckduckgo-search",
+      "source": "research",
+      "descId": "Search the web via DuckDuckGo (text, news, images, video) — no API key needed. For fast, private research.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "gitnexus-explorer",
+      "source": "research",
+      "descId": "Index your codebase with GitNexus and serve an interactive knowledge graph via web UI. For deep codebase analysis and understanding.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "osint-investigation",
+      "source": "research",
+      "descId": "OSINT investigations from public records (SEC, OFAC sanctions, lobbying, property, court filings, and more). For research and entity tracing.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "parallel-cli",
+      "source": "research",
+      "descId": "Web search, extraction, deep research, and agent-native monitoring via Parallel CLI. For structured web research.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: Parallel account & API key",
+        "kind": "api-key",
+        "envKey": null,
+        "steps": [
+          "Sign up at Parallel (paid service, free tier available)",
+          "Install parallel-cli and grab your API key from the dashboard",
+          "Set the API key per the CLI instructions",
+          "Let the agent know once ready"
+        ],
+        "chatPrompt": "I want to use Parallel CLI for web research. Please guide me through signing up and setting up the API key step-by-step.",
+        "docsUrl": null
+      }
+    },
+    {
+      "name": "qmd",
+      "source": "research",
+      "descId": "Search local knowledge bases, notes, and transcripts with qmd (BM25 + vector + LLM rerank). For personal document retrieval.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "scrapling",
+      "source": "research",
+      "descId": "Web scraping with Scrapling (HTTP, stealth browser, Cloudflare bypass, crawler). For collecting data from any website.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "searxng-search",
+      "source": "research",
+      "descId": "Free meta-search via SearXNG (aggregates 70+ search engines) — no API key needed. For private web research without tracking.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: SearXNG instance URL",
+        "kind": "account",
+        "envKey": "SEARXNG_URL",
+        "steps": [
+          "Choose a public SearXNG instance OR self-host your own",
+          "Set SEARXNG_URL to that instance's address (e.g. https://searxng.example.com)",
+          "Without SEARXNG_URL this skill is inactive",
+          "Let the agent know once it's set"
+        ],
+        "chatPrompt": "I want to use SearXNG search. Please guide me through setting SEARXNG_URL (using a public instance or self-hosting) step-by-step.",
+        "docsUrl": "https://searxng.org/"
+      }
+    },
+    {
+      "name": "1password",
+      "source": "security",
+      "descId": "Access and manage passwords and secrets in 1Password via the op CLI. Retrieve credentials securely without exposing plaintext.",
+      "needsSetup": true,
+      "setup": {
+        "label": "Requires: 1Password CLI + account",
+        "kind": "cli",
+        "envKey": "OP_SERVICE_ACCOUNT_TOKEN",
+        "steps": [
+          "Have a 1Password account, then install the op CLI",
+          "Create a Service Account at my.1password.com -> Settings -> Service Accounts",
+          "Copy the Service Account Token",
+          "Set OP_SERVICE_ACCOUNT_TOKEN or use the desktop app integration, then let the agent know"
+        ],
+        "chatPrompt": "I want to use the 1Password skill. Please guide me through installing the 1Password CLI and setting up a service account token step-by-step.",
+        "docsUrl": "https://developer.1password.com/docs/service-accounts/"
+      }
+    },
+    {
+      "name": "oss-forensics",
+      "source": "security",
+      "descId": "Forensic analysis of open-source projects (code provenance and security). For software supply-chain audits.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "sherlock",
+      "source": "security",
+      "descId": "Hunt a username across 400+ social networks (OSINT). For investigating someone's online footprint.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "rest-graphql-debug",
+      "source": "software-development",
+      "descId": "Debug and test REST/GraphQL APIs (status codes, auth, schema, reproduction). For developers testing endpoints.",
+      "needsSetup": false,
+      "setup": null
+    },
+    {
+      "name": "page-agent",
+      "source": "web-development",
+      "descId": "Embed page-agent (pure JS) into your web app so users can control the UI with natural language. For developers adding an AI copilot to their site.",
+      "needsSetup": false,
+      "setup": null
+    }
+  ],
+  "stats": {
+    "total": 170,
+    "needsSetup": 48
+  }
+}

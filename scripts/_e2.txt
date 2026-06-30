@@ -1,0 +1,42 @@
+### 4) Apakah bridge/entrypoint nge-SEED atau SYNC skills dari package ke volume tiap boot? ###
+docker/hermes-bridge/agents_handler.py:15:  - skills/          = <profile_root>/skills/          (installed skills)
+docker/hermes-bridge/agents_handler.py:224:        # seeds bundled skills). Pass --no-alias because AgentBuff users
+docker/hermes-bridge/agents_handler.py:451:            # Copy skills dir if exists
+docker/hermes-bridge/agents_handler.py:454:                shutil.copytree(src_skills, dst_root / "skills", dirs_exist_ok=True)
+docker/hermes-bridge/agents_handler.py:618:    async def set_skill_allowlist(self, agent_id: str, skill_names: list[str]) -> dict:
+docker/hermes-bridge/rpc_router.py:3851:async def handle_agents_skills_set(params: dict, ctx: DispatchContext) -> dict:
+docker/hermes-bridge/rpc_router.py:4654:METHOD_HANDLERS["skills.install"] = handle_skills_install
+docker/hermes-bridge/rpc_router.py:4671:METHOD_HANDLERS["skills.uninstall"] = handle_skills_uninstall
+docker/hermes-bridge/seed_bundled_skills.py:2:"""Seed Hermes bundled + optional skill packs into ~/.hermes/skills/.
+docker/hermes-bridge/seed_bundled_skills.py:6:`pip install hermes-agent` does NOT ship the skills/ data tree (the wheel RECORD
+docker/hermes-bridge/seed_bundled_skills.py:7:has no SKILL.md). Hermes' own design seeds `~/.hermes/skills/` from a bundled
+docker/hermes-bridge/seed_bundled_skills.py:57:        print(f"skill-seed: source {SRC_ROOT} missing — skipping (no bundled skills baked)")
+docker/hermes-bridge/skills_extras.py:45:      - Hermes engine: list of installed/bundled skills via Python introspection
+docker/hermes-bridge/skills_extras.py:106:    managed_skills_dir = str(Path(home) / "skills")
+docker/hermes-bridge/skills_extras.py:130:            "baseDir": managed_skills_dir,
+docker/hermes-bridge/skills_extras.py:150:        "managedSkillsDir": managed_skills_dir,
+docker/hermes-bridge/skills_extras.py:160:async def update_skill_enabled(
+docker/Dockerfile.hermes:154:    # seeds these into each volume on first boot (seed_bundled_skills.py).
+
+### 5) entrypoint / boot script — apa yang jalan saat container start? ###
+docker/Dockerfile.hermes:52:# - git: hermes skills install (fetches from GitHub registry)
+docker/Dockerfile.hermes:134:# We tell Hermes where to find it via HERMES_TUI_DIR (set in entrypoint).
+docker/Dockerfile.hermes:153:    # create-agent wizard's skill list shows nothing. The bridge entrypoint
+docker/Dockerfile.hermes:154:    # seeds these into each volume on first boot (seed_bundled_skills.py).
+docker/Dockerfile.hermes:207:# Copy entrypoint script
+docker/Dockerfile.hermes:208:COPY --chown=root:root docker/hermes-entrypoint.sh /app/entrypoint.sh
+docker/Dockerfile.hermes:209:RUN chmod 0755 /app/entrypoint.sh
+docker/Dockerfile.hermes:237:    CMD curl -fsS http://127.0.0.1:18790/ > /dev/null || exit 1
+docker/Dockerfile.hermes:240:ENTRYPOINT ["/usr/bin/tini", "--", "/app/entrypoint.sh"]
+docker/hermes-bridge/dashboard_launcher.py:27:    2. Survives subprocess restart (env var is set by entrypoint.sh).
+docker/hermes-bridge/dashboard_runtime.py:149:        cmd = list(self._config.command)
+docker/hermes-bridge/dashboard_runtime.py:150:        if cmd and not Path(cmd[0]).is_absolute():
+docker/hermes-bridge/gateway_runtime.py:178:        cmd = list(self._config.command)
+docker/hermes-bridge/gateway_runtime.py:179:        if cmd and not Path(cmd[0]).is_absolute():
+docker/hermes-bridge/hermes_client.py:320:        cmd = list(self._config.command)
+docker/hermes-bridge/hermes_client.py:321:        if cmd and not Path(cmd[0]).is_absolute():
+docker/hermes-bridge/hermes_updater.py:90:PIP_CMD = [sys.executable, "-m", "pip"]
+docker/hermes-bridge/hermes_updater.py:425:        cmd = [
+docker/hermes-bridge/mcp_handler.py:553:                        cmd = f.read().replace(b"\x00", b" ").decode("utf-8", "replace")
+docker/hermes-bridge/mcp_handler.py:556:                if "gateway" in cmd and "run" in cmd and "agentbuff_bridge" not in cmd:
+DONE2

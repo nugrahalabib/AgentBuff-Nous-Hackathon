@@ -1,0 +1,4 @@
+provider: tokens => {'openai': 3, 'gemini': 5}
+providersAny tokens => {'openai': 6, 'xai': 3, 'gemini': 7, 'qwen': 2, 'moonshot': 2, 'groq': 2, 'deepgram': 2, 'anthropic': 1}
+ALL_DISTINCT_VOCAB_PROVIDER_TOKENS => ['anthropic', 'deepgram', 'gemini', 'groq', 'moonshot', 'openai', 'qwen', 'xai']
+TOKENS_NOT_IN_ENGINE (mismatch => need alias) => ['gemini', 'moonshot']

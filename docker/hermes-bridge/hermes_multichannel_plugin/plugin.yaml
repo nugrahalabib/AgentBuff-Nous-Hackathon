@@ -1,0 +1,14 @@
+name: agentbuff-multichannel
+version: 1.0.0
+kind: standalone
+description: >-
+  Per-agen multi-channel for AgentBuff. Registers synthetic platform names
+  (e.g. telegram__cs, telegram__sales) via PluginContext.register_platform so
+  ONE Hermes gateway process can run N bot accounts of the same channel type,
+  each routed to a different agent persona (own SOUL + model + skills) via the
+  pre_gateway_dispatch hook. No engine source modification — uses the native
+  platform_registry + Platform._missing_ + per-session model override
+  mechanisms (all spike-verified 2026-05-30).
+author: AgentBuff
+hooks:
+  - pre_gateway_dispatch

@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# pos-report [today|7d|30d] — store sales report from the Chief's POS UMKM, pulled via the
+# agent-ready POS MCP server (JSON-RPC generate_report). Prints ONE fenced
+# ```agentbuff-pos-report``` block that the portal renders as a report card. The POS
+# server returns an Indonesian summary; this CLI rebuilds it in English from the numbers.
+PERIOD="${1:-today}"
+case "$PERIOD" in today|7d|30d) ;; *) PERIOD="today" ;; esac
+TOKEN=$(grep -E '^MCP_AGENTBUFF_POS_API_KEY=' "$HOME/.hermes/.env" 2>/dev/null | cut -d= -f2- | tr -d '"'"'"'"' )
+URL="http://host.docker.internal:7704/mcp/01KW8QTGTTJ1GWGCBEZ0DE9AZG"
+curl -s --max-time 12 -X POST "$URL" \
+  -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" \
+  -d "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"generate_report\",\"arguments\":{\"period\":\"$PERIOD\"}}}" \
+  | PERIOD="$PERIOD" python3 -c '
+import sys, json, os, re
+try:
+    d = json.load(sys.stdin)
+    r = json.loads(d["result"]["content"][0]["text"])
+except Exception:
+    print("Sales report is not available yet. Make sure the Chief POS is connected."); sys.exit(0)
+period = os.environ.get("PERIOD", "today")
+labels = {"today": "Today", "7d": "Last 7 Days", "30d": "Last 30 Days"}
+prefix = {"today": "So far today", "7d": "Over the last 7 days", "30d": "Over the last 30 days"}
+omzet = int(r.get("omzet", 0) or 0)
+trx = int(r.get("transaksi", 0) or 0)
+def rp(n):
+    return "Rp " + format(int(n), ",").replace(",", ".")
+avg = rp(round(omzet / trx)) if trx else rp(0)
+# Best-seller: parse from the source summary ("Produk terlaris: X." / "Best-seller: X.")
+m = re.search(r"(?:terlaris|best[- ]?seller)\s*:\s*([^.]+)", str(r.get("ringkasan", "")), re.I)
+best = m.group(1).strip() if m else ""
+summary = "%s: %d transactions, revenue %s (avg %s/transaction)." % (
+    prefix.get(period, "Today"), trx, rp(omzet), avg,
+)
+if best:
+    summary += " Best-seller: %s." % best
+print("```agentbuff-pos-report")
+print(json.dumps({
+    "period": labels.get(period, "Today"),
+    "omzet": omzet,
+    "transaksi": trx,
+    "ringkasan": summary,
+}, ensure_ascii=False))
+print("```")
+'

@@ -1,0 +1,7 @@
+name: agentbuff-multimodal
+version: 3.0.0
+description: "AgentBuff universal multimodal pipeline. Mirrors OpenClaw's media-understanding architecture across audio/image/video/document. Extends Hermes with provider chains for STT (OpenAI / Groq / Deepgram / Gemini / Mistral / xAI / Anthropic), vision (OpenAI / Anthropic / Gemini / OpenRouter / MiniMax / Z.AI / Qwen / Moonshot / xAI), video (Gemini / Qwen / Moonshot), and documents (native PDF passthrough for Anthropic+Gemini + pdfplumber/python-docx/openpyxl/python-pptx text extraction). Active-chat-model fallback at every tier. Patches Hermes via monkey-patch (transcribe_audio, vision_analyze_tool) + pre_gateway_dispatch hook (video + document). Lives in $HERMES_HOME/plugins/ (volume) so the patch survives `pip install --upgrade hermes-agent`. Affects ALL surfaces: web UI, Telegram, WhatsApp, Discord, Slack, and any future channel that goes through gateway/run.py."
+author: "AgentBuff (portal team)"
+kind: standalone
+hooks:
+  - pre_gateway_dispatch

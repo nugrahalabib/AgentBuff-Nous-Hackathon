@@ -1,0 +1,71 @@
+# =============================================================================
+# Dockerfile build-context exclusions for `docker/Dockerfile.hermes`
+# =============================================================================
+#
+# This file is interpreted relative to the build context (the directory
+# `docker build` is invoked from — typically the LandingPage/ root).
+#
+# Goal: keep the build context tiny (faster builds, smaller layer caches,
+# no accidental secret leakage).
+#
+# Only the `docker/hermes-bridge/` subtree is actually copied into the image
+# by Dockerfile.hermes. Everything else is excluded explicitly so a stray
+# `COPY .` (if added later) doesn't grab .env.local or node_modules.
+
+# Node / Next.js artifacts
+node_modules/
+.next/
+.turbo/
+out/
+
+# Python build artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.python-version
+
+# Git
+.git/
+.gitignore
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Secrets (CRITICAL — never copy into image)
+.env
+.env.local
+.env.*.local
+
+# Backup files
+*.backup
+*.bak
+*.tmp
+*.swp
+
+# Test caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Build caches
+tsconfig.tsbuildinfo
+
+# Hermes engine reference (not needed — installed via pip)
+Reff/
+
+# Archives + backups
+.archive*/
+*_backup_*.tar.gz
+*_backup_*.zip
+
+# Drizzle migrations (portal-side concern)
+drizzle/

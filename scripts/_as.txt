@@ -1,0 +1,2 @@
+### active-surface.tsx — tab registry (id + label + which component) ###
+259:  label: string;
